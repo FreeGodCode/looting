@@ -1,0 +1,132 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}新增提现分类{% endblock %}
+{% block style %}
+    <style type="text/css">
+        .layui-form-label {
+            width: 150px;
+        }
+
+        .layui-input-block {
+            margin-left: 180px;
+        }
+
+        body {
+            background: white;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div style="padding: 15px;">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>新增提现分类</legend>
+        </fieldset>
+        <form class="layui-form" id="form_box" method="post">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">分类名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" id="name" lay-verify="name" autocomplete="off"
+                           placeholder="请输入提现分类名称"
+                           class="layui-input" required>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">限制次数</label>
+                <div class="layui-input-block">
+                    <input type="number" name="limit_num" id="limit_num" lay-verify="limit_num" autocomplete="off"
+                           placeholder="请输入限制次数"
+                           class="layui-input" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">每日限制次数</label>
+                <div class="layui-input-block">
+                    <input type="number" name="daily_limit_num" id="daily_limit_num" lay-verify="daily_limit_num" autocomplete="off"
+                           placeholder="请输入每日限制次数"
+                           class="layui-input" value="0" min="0">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-layout-admin">
+                <div class="layui-input-block">
+                    <div class="layui-footer" style="left: 0;">
+                        <button class="layui-btn" lay-submit="" id="demo1" lay-filter="component-form-demo1">立即提交
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+
+    <script>
+
+        var $, form;
+        layui.config({
+            base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form', "laydate", 'layedit', 'element'], function () {
+            $ = layui.$;
+            form = layui.form;
+            //执行一个laydate实例
+            layui.laydate.render({
+                elem: '.start_time',
+                type: 'time'
+            });
+            layui.laydate.render({
+                elem: '.end_time',
+                type: 'time'
+            });
+
+            var element = layui.element;
+
+            form = layui.form;
+            $form = $('form');
+
+            $(".input-file").on("change", function () {
+                var _html = $(this).val();
+                $(this).prev("span.see_file").html(_html)
+            });
+            $('#form_box').ajaxForm({
+                url: "/api/withdraw_config/class_add",
+                beforeSubmit: checkForm,  // pre-submit callback
+                beforeSend: beforesend,
+                success: complete,  // post-submit callback
+                error: error_fun,
+                dataType: 'json'
+            });
+
+            function beforesend() {
+                showLoading();
+            }
+
+            function checkForm() {
+                return true;
+            }
+
+            function complete(data) {
+                if (data.code == 200) {
+                    showSuccessTips('添加成功！', '提示', function () {
+                        layer.closeAll("loading");
+                        parent.location.reload();
+                    });
+                    return;
+                } else {
+                    showErrorTips(data.msg, '提示', function () {
+                        layer.closeAll("loading");
+                    });
+                }
+            }
+
+            function error_fun() {
+                showErrorTips('操作失败', '提示', function () {
+                    layer.closeAll("loading");
+                });
+            }
+        });
+    </script>
+{% endblock %}

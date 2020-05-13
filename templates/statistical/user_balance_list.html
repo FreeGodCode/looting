@@ -1,0 +1,99 @@
+{% extends "layout/tableLayout.html" %}
+{% block title %}用户金额占比分析{% endblock %}
+{% block style %}
+
+{% endblock %}
+{% block content %}
+<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+
+</div>
+
+<div class="layui-card-body">
+    <table id="LAY-app-system-order" lay-filter="demo"></table>
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    var table, $, layer, element, form;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'layer', 'table', 'element'], function () {
+        $ = layui.$;
+        table = layui.table;
+        layer = layui.layer;
+        form = layui.form;
+        element = layui.element;
+        //监听搜索
+        form.on('submit(LAY-app-order-search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('LAY-app-system-order', {
+                where: field
+            });
+        });
+        //监听工具条("删除/编辑/设定角色")
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                show_edit(data._id);
+            }
+        });
+        //渲染table
+        table.render({
+            elem: '#LAY-app-system-order'
+            , url: '/api/statistical/user_share_list' //模拟接口
+            , cols: [[
+                {field: 'today_str', width: 130, title: '日期', align: 'center'}
+                , {field: 'user_num_total', width: 100, title: '总用户', align: 'center'}
+                , {field: 'balance_50', width: 130, title: '余额大于50', align: 'center'}
+                , {field: 'balance_50_percentage', width: 130, title: '余额大于50占比', align: 'center'}
+                , {field: 'balance_50_total', width: 180, title: '余额大于50用户总余额', align: 'center'}
+                , {field: 'balance_40_50', width: 130, title: '余额40-50', align: 'center'}
+                , {field: 'balance_40_50_percentage', width: 130, title: '余额40-50占比', align: 'center'}
+                , {field: 'balance_40_50_total', width: 180, title: '余额40-50用户总余额', align: 'center'}
+                , {field: 'balance_30_40', width: 130, title: '余额30-40', align: 'center'}
+                , {field: 'balance_30_40_percentage', width: 130, title: '余额30-40占比', align: 'center'}
+                , {field: 'balance_30_40_total', width: 180, title: '余额30-40用户总余额', align: 'center'}
+                , {field: 'balance_20_30', width: 130, title: '余额20-30', align: 'center'}
+                , {field: 'balance_20_30_percentage', width: 130, title: '余额20-30占比', align: 'center'}
+                , {field: 'balance_20_30_total', width: 180, title: '余额20-30用户总余额', align: 'center'}
+                , {field: 'balance_10_20', width: 130, title: '余额10-20', align: 'center'}
+                , {field: 'balance_10_20_percentage', width: 130, title: '余额10-20占比', align: 'center'}
+                , {field: 'balance_10_20_total', width: 180, title: '余额10-20用户总余额', align: 'center'}
+                , {field: 'balance_5_10', width: 130, title: '余额5-10', align: 'center'}
+                , {field: 'balance_5_10_percentage', width: 130, title: '余额5-10占比', align: 'center'}
+                , {field: 'balance_5_10_total', width: 180, title: '余额5-10用户总余额', align: 'center'}
+                , {field: 'balance_5', width: 130, title: '余额小于5', align: 'center'}
+                , {field: 'balance_5_percentage', width: 130, title: '余额小于5占比', align: 'center'}
+                , {field: 'balance_5_total', width: 180, title: '余额小于5用户总余额', align: 'center'}
+
+            ]],
+            response: { //定义后端 json 格式，详细参见官方文档
+                statusName: 'code', //状态字段名称
+                statusCode: '200', //状态字段成功值
+                msgName: 'msg', //消息字段
+                countName: 'count', //总数字段
+                dataName: 'list' //数据字段
+            }
+            , page: true
+            , limit: 15
+            , limits: [10, 15, 20, 25, 30, 50]
+            , text: {
+                none: '暂无相关数据'
+            }
+            , done: function () {
+                element.render('progress')
+            }
+        });
+        $("#add").on("click", function () {
+            show_page();
+        });
+    });
+
+
+</script>
+{% endblock %}

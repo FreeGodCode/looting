@@ -1,0 +1,90 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}添加收益{% endblock %}
+{% block style %}
+     <style type="text/css">
+        .layui-form-label{width: 80px;}
+        .layui-input-block{margin-left: 110px;}
+    </style>
+{% endblock %}
+{% block content %}
+    <div style="margin: 15px;">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>添加收益</legend>
+        </fieldset>
+
+        <form class="layui-form" id="form_box" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="c-red em">*</span>昨日收益：</label>
+                <div class="layui-input-block">
+                    <input type="number" name="yesterday_income"  id="yesterday_income" autocomplete="off" placeholder="请输入昨日收益" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="c-red em">*</span>红包池：</label>
+                <div class="layui-input-block">
+                    <input type="number" name="red_pool"  id="red_pool" autocomplete="off" placeholder="请输入红包池" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="submit" class="layui-btn"  id="demo1" value="立即提交">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+<script>
+   var $, form;
+   layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+      }).extend({
+        index: 'lib/index' //主入口模块
+      }).use(['index', 'form'], function(){
+        $ = layui.$;
+        form = layui.form;
+        $('#form_box').ajaxForm({
+            url:"/api/income/add",
+            beforeSubmit:checkForm,  // pre-submit callback
+            beforeSend: beforesend,
+            success: complete,  // post-submit callback
+            error:error_fun,
+            dataType: 'json'
+        });
+        function beforesend() {
+            showLoading();
+        }
+        function checkForm(){
+            var yesterday_income = $('#yesterday_income').val();
+            if(yesterday_income==''){
+                showErrorTips('昨日收益不能为空', '提示', function (){
+                    layer.closeAll("loading");
+                 });
+                return false;
+            }
+            return true;
+        }
+        function complete(data){
+            if (data.code ==200 ){
+               showSuccessTips('添加成功！', '提示', function(){
+                   //iframe页面
+                   layer.closeAll("loading");
+                   parent.location.reload();
+                });
+                return;
+            }else{
+                 showErrorTips(data.msg, '提示', function (){
+                    layer.closeAll("loading");
+                 });
+            }
+        }
+        function error_fun(){
+            showErrorTips('操作失败', '提示', function (){
+                layer.closeAll("loading");
+            });
+        }
+    });
+
+</script>
+{% endblock %}

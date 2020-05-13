@@ -1,0 +1,288 @@
+{% extends "layout/tableLayout.html" %}
+{% block title %}用户管理{% endblock %}
+{% block style %}
+<style type="text/css">
+    .layui-form-label {
+        width: 100px;
+    }
+
+    .layui-input-block {
+        margin-left: 130px;
+        width: 180px;
+    }
+
+    .layui-button-left {
+        margin-left: 50px;
+    }
+
+    .layui-inline {
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+    <div class="layui-inline">
+        <label class="layui-form-label">昵称</label>
+        <div class="layui-input-block">
+            <input type="text" name="nickname" lay-verify="nickname" id="nickname" autocomplete="off"
+                   placeholder="请输入用户昵称" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-inline">
+        <label class="layui-form-label">手机号</label>
+        <div class="layui-input-block">
+            <input type="number" name="phone" lay-verify="phones" id="phones" autocomplete="off" placeholder="请输入用户手机号"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">邀请码</label>
+        <div class="layui-input-block">
+            <input type="text" name="invite_code" lay-verify="invite_code" id="invite_code" autocomplete="off"
+                   placeholder="请输入用户邀请码"
+                   class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-inline">
+        <label class="layui-form-label">真实姓名</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="name" id="name" autocomplete="off" placeholder="请输入用户真实姓名"
+                   class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-inline">
+        <label class="layui-form-label">身份证号</label>
+        <div class="layui-input-block">
+            <input type="number" name="id_card" lay-verify="id_card" id="id_card" autocomplete="off"
+                   placeholder="请输入用户身份证号码" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">注册时间</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="created_time" lay-verify="created_time" id="created_time"
+                   autocomplete="off" placeholder="请输入时间" lay-key="6">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">APP版本号</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="app_version" lay-verify="app_version" id="app_version"
+                   autocomplete="off" placeholder="请输入APP版本号" lay-key="6">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">设备系统</label>
+        <div class="layui-input-block">
+            <select name="mp_system_type" id="mp_system_type" lay-verify="mp_system_type">
+                <option value="">请选择</option>
+                <option value="ios">ios</option>
+                <option value="android">android</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">账号等级</label>
+        <div class="layui-input-block">
+            <select name="grade" id="grade" lay-verify="grade">
+                <option value="">请选择</option>
+                <option value="1">星球球主</option>
+                <option value="2">原始居民</option>
+                <option value="3">附属居民</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-inline">
+        <label class="layui-form-label">新手任务</label>
+        <div class="layui-input-block">
+            <select name="new_value" id="new_value" lay-verify="new_value">
+                <option value="">请选择</option>
+                <option value="-1">任务已完成</option>
+                <option value="0">未开始</option>
+                <option value="1">完成第一步</option>
+                <option value="2">完成第二步</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">实名状态</label>
+        <div class="layui-input-block">
+            <select name="verified_status" id="verified_status" lay-verify="verified_status">
+                <option value="">请选择</option>
+                <option value="1">认证通过</option>
+                <option value="0">未认证</option>
+                <option value="-1">认证失败</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">账号状态</label>
+        <div class="layui-input-block">
+            <select name="status" id="status" lay-verify="status">
+                <option value="">请选择</option>
+                <option value="0">正常</option>
+                <option value="1">封禁</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">提现状态</label>
+        <div class="layui-input-block">
+            <select name="withdraw_status" id="withdraw_status" lay-verify="withdraw_status">
+                <option value="">请选择</option>
+                <option value="-2">提现失败</option>
+                <option value="-1">已提现</option>
+                <option value="0">未提现</option>
+                <option value="1">审核中</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-inline layui-button-left">
+        <button class="layui-btn layuiadmin-btn-order" lay-submit lay-filter="LAY-app-order-search">
+            搜索
+        </button>
+    </div>
+</div>
+<div class="layui-card-body">
+    <table id="LAY-app-system-order" lay-filter="demo"></table>
+    <script type="text/html" id="table-system-order">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</a>
+    </script>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    var table, $, layer, element, form;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'layer', 'table', 'element', 'laydate'], function () {
+        $ = layui.$;
+        table = layui.table;
+        layer = layui.layer;
+        form = layui.form;
+        element = layui.element;
+        layui.laydate.render({
+            elem: '#created_time',
+            format: 'yyyy-MM-dd'
+        });
+        //回车监听搜索
+        $(document).on('keydown', function (e) {
+            if (e.keyCode == 13) {
+                $(".layuiadmin-btn-order").click();
+            }
+        });
+        //监听搜索
+        form.on('submit(LAY-app-order-search)', function (data) {
+            var field = data.field;
+            table_render(field);
+        });
+        table_render();
+        //监听工具条("删除/编辑/设定角色")
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                parent.tab.addTabsPage("/user/edit?_id=" + data._id, "编辑用户")
+            }
+        });
+        //点击邀请码
+        $("body").on("click", ".show-user-invite", function () {
+            var id = $(this).attr("data-id");
+            var data_name = $(this).attr("data-name");
+            parent.tab.addTabsPage("/user/list?invite_id=" + id, "邀请列表_" + data_name)
+        });
+        //渲染table
+        function table_render(data) {
+            table.render({
+                elem: '#LAY-app-system-order'
+                , url: '/api/user/my_list?user_id=' + '{{ user_id }}' + '&invite_id=' + '{{ invite_id }}' //模拟接口
+                , cols: [[
+                    {field: 'bind_mobile', width: 120, title: '绑定手机', align: 'center'}
+                    , {
+                        field: 'nickname', width: 100, title: '昵称', align: 'center', templet: function (d) {
+                            if (d.nickname == "") {
+                                return "-";
+                            } else {
+                                return d.nickname;
+                            }
+                        }
+                    }
+                    , {
+                        field: 'app_version', width: 120, title: 'APP版本号', align: 'center', templet: function (d) {
+                            if (d.app_version == "") {
+                                return "-";
+                            } else {
+                                return d.app_version;
+                            }
+                        }
+                    }
+
+                    , {field: 'mp_system_type', width: 100, title: '设备系统', align: 'center'}
+                    , {field: 'mp_device_model', width: 100, title: '手机型号', align: 'center'}
+                    , {field: 'req_ip', width: 150, title: '登录ip', align: 'center'}
+                    , {field: 'req_ip_area', width: 150, title: 'ip地区', align: 'center'}
+                    , {field: 'login_times', width: 90, title: '登录天数', align: 'center'}
+                    , {field: 'created_time', width: 170, title: '注册时间', align: 'center'}
+                    , {field: 'last_visit_time', width: 170, title: '最后活跃时间', align: 'center'}
+                    , {field: 'withdraw_status', width: 100, title: '提现状态', align: 'center'}
+                    , {field: 'balance', width: 100, title: '当前余额', align: 'center'}
+
+                    , {
+                        field: 'invite_code', width: 80, title: '邀请码', align: 'center', templet: function (d) {
+                            return '<div style="word-break:break-all;"><a href="javascript:;" data-id="' + d._id + '" data-name="' + d.nickname + '" class="show-user-invite" style="color:blue;">' + d.invite_code + '</a></div>';
+                        }
+                    }
+                    , {field: 'invite_num', width: 90, title: '邀请人数', align: 'center'}
+                    , {field: 'invite_name', width: 100, title: '邀请人', align: 'center'}
+                    , {
+                        field: 'status', width: 90, title: '会员状态', align: 'center', templet: function (d) {
+                            if (d.status == 0) {
+                                return '<span style="color: #29d90b;">正常</span>';
+                            } else {
+                                return '<span style="color: red;">封禁</span>';
+                            }
+                        }
+                    }
+                    , {
+                        field: 'reg_source', align: 'center', width: 100, title: '注册来源'
+                    }
+
+
+                    , {
+                        field: '_id',
+                        title: '操作',
+                        align: 'center',
+                        width: 80,
+                        fixed: 'right',
+                        toolbar: '#table-system-order'
+                    }
+                ]],
+                where: data,
+                response: { //定义后端 json 格式，详细参见官方文档
+                    statusName: 'code', //状态字段名称
+                    statusCode: '200', //状态字段成功值
+                    msgName: 'msg', //消息字段
+                    countName: 'count', //总数字段
+                    dataName: 'list' //数据字段
+                }
+                , page: true
+                , limit: 15
+                , limits: [10, 15, 20, 25, 30]
+                , text: {
+                    none: '暂无相关数据'
+                }
+                , done: function () {
+                    element.render('progress')
+                }
+            })
+        }
+    })
+</script>
+{% endblock %}

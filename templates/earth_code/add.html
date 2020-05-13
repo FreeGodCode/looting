@@ -1,0 +1,117 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}添加地球邀请码{% endblock %}
+{% block style %}
+<style type="text/css">
+    .layui-form-label {
+        width: 100px;
+    }
+
+    .layui-input-block {
+        margin-left: 130px;
+    }
+
+    body {
+        background: white;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div style="padding: 15px;">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>添加地球邀请码</legend>
+    </fieldset>
+    <form class="layui-form" id="form_box" method="post">
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">邀请码</label>
+            <div class="layui-input-block">
+                <input type="text" name="invite_code" id="invite_code" lay-verify="invite_code" autocomplete="off"
+                       placeholder="请输入邀请码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="remark" id="remark" lay-verify="remark" autocomplete="off"
+                       placeholder="请输入备注" class="layui-input">
+            </div>
+        </div>
+
+
+
+
+
+        <div class="layui-form-item layui-layout-admin">
+            <div class="layui-input-block">
+                <div class="layui-footer" style="left: 0;">
+                    <button class="layui-btn" lay-submit="" id="demo1" lay-filter="component-form-demo1">立即提交</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    var $, form;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', "laydate", 'layedit', 'element'], function () {
+        $ = layui.$;
+        form = layui.form;
+
+        //执行一个laydate实例
+        layui.laydate.render({
+            elem: '.showdate',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        var element = layui.element;
+        form = layui.form,
+                $form = $('form');
+        $(".input-file").on("change", function () {
+            var _html = $(this).val();
+            $(this).prev("span.see_file").html(_html)
+        });
+
+        $('#form_box').ajaxForm({
+            url: "/api/earth_code/add",
+            beforeSubmit: checkForm,  // pre-submit callback
+            beforeSend: beforesend,
+            success: complete,  // post-submit callback
+            error: error_fun,
+            dataType: 'json'
+        });
+        function beforesend() {
+            showLoading();
+        }
+
+        function checkForm() {
+            return true;
+        }
+
+        function complete(data) {
+            if (data.code == 200) {
+                showSuccessTips('添加成功！', '提示', function () {
+                    layer.closeAll("loading");
+                    parent.location.reload();
+                });
+                return;
+            } else {
+                showErrorTips(data.msg, '提示', function () {
+                    layer.closeAll("loading");
+                });
+            }
+        }
+
+        function error_fun() {
+            showErrorTips('操作失败', '提示', function () {
+                layer.closeAll("loading");
+            });
+        }
+
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,255 @@
+{% extends "layout/tableLayout.html" %}
+{% block title %}提现管理{% endblock %}
+{% block style %}
+    <style type="text/css">
+        .layui-form-label {
+            width: 100px;
+        }
+
+        .layui-input-block {
+            margin-left: 130px;
+            width: 180px;
+        }
+
+        .layui-button-left {
+            margin-left: 50px;
+        }
+
+        /*tbody .layui-table-cell {*/
+        /*min-height: 55px;*/
+        /*line-height: 55px;*/
+        /*}*/
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+        <div class="layui-inline">
+            <label class="layui-form-label">用户昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickname" lay-verify="nickname" id="nickname" autocomplete="off"
+                       placeholder="请输入用户昵称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">绑定手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="bind_mobile" lay-verify="bind_mobile" id="bind_mobile" autocomplete="off"
+                       placeholder="请输入用户绑定的手机号"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">提现方式</label>
+            <div class="layui-input-block">
+                <select name="origin" id="origin" lay-verify="origin">
+                    <option value="">请选择</option>
+                    <option value="微信提现">微信提现</option>
+                    <option value="支付宝提现">支付宝提现</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">提现类型</label>
+            <div class="layui-input-block">
+                <select name="type_num" id="type_num" lay-verify="type_num">
+                    <option value="">请选择</option>
+                    <option value="0">新手提现体验</option>
+                    <option value="1">正常提现</option>
+                    <option value="2">活动提现</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">审核状态</label>
+            <div class="layui-input-block">
+                <select name="status" id="status" lay-verify="status">
+                    <option value="">请选择</option>
+                    <option value="-1">审核失败</option>
+                    <option value="0">审核中</option>
+                    <option value="1">已完成</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline layui-button-left">
+            <button class="layui-btn layuiadmin-btn-order" lay-submit lay-filter="LAY-app-order-search">
+                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+            </button>
+        </div>
+
+    </div>
+    <blockquote class="layui-elem-quote">
+        <!--<a href="javascript:;" id="add" class="layui-btn layui-btn-small">-->
+        <!--<i class="layui-icon">&#xe608;</i> 添加-->
+        <!--</a>-->
+    </blockquote>
+    <div class="layui-card-body">
+        <table id="LAY-app-system-order" lay-filter="demo"></table>
+        <script type="text/html" id="table-system-order">
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="audit_success">审核成功</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="audit_fail">审核失败</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">审核</a>
+        </script>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        var table, $, layer, element, form;
+        layui.config({
+            base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'layer', 'table', 'element'], function () {
+            $ = layui.$;
+            table = layui.table;
+            layer = layui.layer;
+            form = layui.form;
+            element = layui.element;
+            //监听搜索
+            form.on('submit(LAY-app-order-search)', function (data) {
+                var field = data.field;
+                //执行重载
+                table.reload('LAY-app-system-order', {
+                    where: field
+                });
+            });
+            //监听工具条("删除/编辑/设定角色")
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                switch (obj.event) {
+                    case 'edit':
+                        show_edit(data._id);
+                        break;
+                    case 'audit_success':
+                        audit_success_fn(data._id);
+                        break;
+                    case 'audit_fail':
+                        audit_fail_fn(data._id);
+                        break;
+                    default:
+                        break;
+                }
+            });
+            //渲染table
+            table.render({
+                elem: '#LAY-app-system-order'
+                , url: '/api/withdraw/my_list' //模拟接口
+                , cols: [[
+                    {field: 'nickname', width: 130, title: '用户昵称', align: 'center'}
+                    , {field: 'bind_mobile', width: 130, title: '绑定手机号', align: 'center'}
+                    , {field: 'type_num_name', width: 130, title: '提现类型', align: 'center'}
+                    , {field: 'value', width: 100, title: '提现金额', align: 'center'}
+                    , {field: 'balance', width: 100, title: '提现后余额', align: 'center'}
+                    , {field: 'origin', title: '提现渠道', width: 130, align: 'center'}
+                    , {field: 'alipay_name', title: '真实姓名', width: 130, align: 'center'}
+                    , {field: 'alipay_account', title: '支付宝账号', width: 130, align: 'center'}
+//                , {
+//                    field: 'weixin_qrcode',
+//                    title: '微信收款二维码',
+//                    width: 130,
+//                    align: 'center',
+//                    templet: function (item) {
+//                        return '<div onclick="show_img(this)" ><img src="' + item.weixin_qrcode + '" onclick="closeImg(this)" width="55"></div>'
+//                    }
+//                }
+                    , {field: 'status_name', title: '提现状态', width: 100, align: 'center'}
+                    , {field: 'created_time', title: '申请时间', width: 180, align: 'center'}
+                    , {field: 'review_time', title: '审核时间', width: 180, align: 'center'}
+                    , {field: 'review_name', title: '审核人', width: 120, align: 'center'}
+                    , {field: 'remark', title: '备注(失败原因)', width: 120, align: 'center'}
+                    , {field: 'err_code', title: '支付单号(错误码)', width: 120, align: 'center'}
+                    , {
+                        field: '_id',
+                        title: '操作',
+                        align: 'center',
+                        width: 300,
+                        fixed: 'right',
+                        toolbar: '#table-system-order'
+                    }
+                ]],
+                response: { //定义后端 json 格式，详细参见官方文档
+                    statusName: 'code', //状态字段名称
+                    statusCode: '200', //状态字段成功值
+                    msgName: 'msg', //消息字段
+                    countName: 'count', //总数字段
+                    dataName: 'list' //数据字段
+                }
+                , page: true
+                , limit: 15
+                , limits: [10, 15, 20, 25, 30, 50]
+                , text: {
+                    none: '暂无相关数据'
+                }
+                , done: function () {
+                    element.render('progress')
+                }
+            });
+            $("#add").on("click", function () {
+                show_page();
+            });
+
+        });
+
+        /**
+         * 编辑
+         */
+        function show_edit(_id) {
+            layer_show("审核提现", "/withdraw/edit?_id=" + _id, '900', '800');
+        }
+
+        function audit_success_fn(_id) {
+            var params = {
+                '_id': _id
+            };
+            $.ajax({
+                url: '/api/withdraw/success',
+                data: params,
+                dataType: 'json',
+                method: 'put',
+                success: function (data) {
+                    console.log('test');
+                    if (data.code == 200) {
+                        showSuccessTips('更新成功！', '提示', function () {
+                            parent.location.reload();
+                            //iframe页面
+                            layer.closeAll("loading");
+                        });
+                        return;
+                    } else {
+                        showErrorTips(data.msg, '提示', function () {
+                            layer.closeAll("loading");
+                        });
+                    }
+                },
+                fail: function (err) {
+                    console.log('test');
+                    showErrorTips('操作失败', '提示', function () {
+                        layer.closeAll("loading");
+                    });
+                }
+            })
+        }
+
+        function audit_fail_fn(_id) {
+
+        }
+
+        function show_img(t) {
+            var t = $(t).find("img");
+            //页面层
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['50%', '60%'], //宽高
+                shadeClose: true, //开启遮罩关闭
+                end: function (index, layero) {
+                    return false;
+                },
+                content: '<div style="text-align:center"><img width="400" src="' + $(t).attr('src') + '" /></div>'
+            });
+        }
+
+
+    </script>
+{% endblock %}

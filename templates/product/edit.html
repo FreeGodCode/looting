@@ -1,0 +1,347 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}编辑商品{% endblock %}
+{% block style %}
+    <style type="text/css">
+        .layui-form-label {
+            width: 120px;
+        }
+
+        .layui-input-block {
+            margin-left: 150px;
+        }
+
+        body {
+            background: white;
+        }
+
+        .layui-upload-img {
+            width: 120px;
+            height: 120px;
+            margin: 0 10px 10px 0;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div style="padding: 15px;">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>编辑商品</legend>
+        </fieldset>
+        <form class="layui-form" id="form_box" method="post">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品名字</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" id="name" lay-verify="name" autocomplete="off" placeholder="请输入商品名字"
+                           class="layui-input" required>
+                    <input type="hidden" id="_id" name="_id">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">缩略图</label>
+                <div class="layui-input-block">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test1">上传图片</button>
+                        <div class="layui-upload-list">
+                            <img class="layui-upload-img" id="demo1">
+                            <p id="demoText"></p>
+                            <input type="hidden" name="thumbnail_url" id="thumbnail_url">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品轮播图</label>
+                <div class="layui-input-block">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="test2">多图片上传</button>
+                        <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                            预览图：
+                            <div class="layui-upload-list" id="demo2"></div>
+                        </blockquote>
+                        <div id="input_file_group" style="display: none">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入次商品的描述" name="description" id="description"
+                              class="layui-textarea"
+                              style="width: 100%;height:100px;"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品库存</label>
+                <div class="layui-input-block">
+                    <input type="number" name="stock_num" id="stock_num" lay-verify="stock_num" value="0"
+                           autocomplete="off"
+                           placeholder="请输入商品的库存数量" class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品价值</label>
+                <div class="layui-input-block">
+                    <input type="number" name="worth_value" id="worth_value" lay-verify="worth_value" value="0"
+                           autocomplete="off"
+                           placeholder="请输入商品的价值" class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序值</label>
+                <div class="layui-input-block">
+                    <input type="number" name="sort_num" id="sort_num" lay-verify="sort_num" value="0"
+                           autocomplete="off"
+                           placeholder="请输入商品的排序值" class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品状态</label>
+                <div class="layui-input-block">
+                    <select name="status" id="status">
+                        <option value="1" selected>显示</option>
+                        <option value="0">隐藏</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入商品的备注" name="remark" id="remark"
+                              class="layui-textarea"
+                              style="width: 100%;height:100px;"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item" style="display: none;">
+                <label class="layui-form-label">玩法规则：默认无需修改</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="" name="rules" id="rules"
+                              class="layui-textarea"
+                              style="width: 100%;height:100px;">
+1, 每个商品可参与次数不限；
+2, 中奖后3个工作日安排发货；
+3, 每个商品开奖号码唯一值；
+4, 进度100%立马开奖；
+5, 每个号码所消耗的奖券数相同；
+6, 号码越多中奖概率越高；
+                              </textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-layout-admin">
+                <div class="layui-input-block">
+                    <div class="layui-footer" style="left: 0;">
+                        <button class="layui-btn" lay-submit="" id="demo1" lay-filter="component-form-demo1">立即提交
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-layout-admin">
+                <div class="layui-input-block">
+                    <div class="layui-footer" style="left: 0;">
+                        <button class="layui-btn" lay-submit="" id="demo1" lay-filter="component-form-demo1">立即提交
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript"
+            src="{{ url_for('login.static', filename='js/kindeditor-4.1.7/kindeditor-all-min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ url_for('login.static', filename='js/kindeditor-4.1.7/lang/zh_CN.js') }}"></script>
+    <script>
+        KindEditor.ready(function (K) {
+            var editor = window.editor = K.create('#content', {
+                uploadJson: '/api/product/upload_img',
+                allowFileManager: true,
+                allowImageUpload: true,
+                urlType: 'domain',
+                filterMode: false,
+                afterBlur: function () {
+                    this.sync()
+                }
+            })
+        });
+        var $, form, upload;
+        layui.config({
+            base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form', "laydate", 'layedit', 'upload'], function () {
+            $ = layui.$;
+            form = layui.form;
+            upload = layui.upload;
+            //执行一个laydate实例
+            layui.laydate.render({
+                elem: '.showdate',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+
+            form = layui.form;
+            $form = $('form');
+
+
+            upload.render({
+                elem: '#test1'
+                , url: '/api/common/upload' //改成您自己的上传接口
+                , data: {type_num: 0}
+                , accept: 'images'
+                , multiple: true
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#demo1').attr('src', result);
+                    });
+                }
+                , done: function (res, index, upload) {
+                    //上传完毕
+                    if (res.code == 200) {
+                        var res_url = res.data;
+                        $('#thumbnail_url').val(res_url);
+                    } else {
+                        show_upload_fail(upload, $('#thumbnail_url'));
+                    }
+                }
+                , error: function (index, upload) {
+                    show_upload_fail(upload, $('#thumbnail_url'));
+                }
+            });
+
+
+            upload.render({
+                elem: '#test2'
+                , url: '/api/common/upload' //改成您自己的上传接口
+                , data: {type_num: 0}
+                , accept: 'images'
+                , multiple: true
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#demo2').append(
+                            '<img src="' + result + '" alt="' + file.name + '" class="layui-upload-img">'
+                        );
+                        $('#input_file_group').append(
+                            `<input type="hidden" name="image_list_${index}" id="image_list_${index}">`
+                        );
+                    });
+                }
+                , done: function (res, index, upload) {
+                    //上传完毕
+                    if (res.code == 200) {
+                        var res_url = res.data;
+                        $(`#image_list_${index}`).val(res_url);
+                    } else {
+                        $(`#image_list_${index}`).remove();
+                        show_upload_fail(upload);
+                    }
+                }
+                , error: function (index, upload) {
+                    $(`#image_list_${index}`).remove();
+                    show_upload_fail(upload);
+                }
+            });
+
+            function show_upload_fail(upload, elem) {
+                layer.confirm('上传失败，是否要重新上传?', {
+                        btn: ['确定', '取消'] //按钮
+                    }, function () {
+                        var result = upload();
+                        console.log(result);
+                    }
+                )
+            }
+
+
+            $.ajax({
+                type: 'get',
+                url: '/api/product/detail?_id={{ _id }}',
+                dataType: 'json',
+                beforeSend: function (xhr, settings) {
+                    showLoading();
+                },
+                success: function (data) {
+                    if (data.code != 200) {
+                        var login_callback = undefined;
+                        if (data.code == 230) {
+                            login_callback = login_address_jump;
+                        }
+                        //如果是未登录则进行跳转
+                        showErrorTips(data.msg, '错误提示', login_callback);
+                        return;
+                    } else {
+                        console.log('test');
+                        var item = data.data;
+                        $("#_id").val(item._id);
+                        $("#name").val(item.name);
+                        {#editor.html(item.content);#}
+                        $("#description").val(item.description);
+                        $("#worth_value").val(item.worth_value);
+                        $("#stock_num").val(item.stock_num);
+                        $("#sort_num").val(item.sort_num);
+                        $("#status").val(item.status);
+                        $("#remark").val(item.remark);
+                        $("#rules").val(item.rules);
+                        $('#demo1').attr('src', item.thumbnail_url);
+                        $('#thumbnail_url').val(item.thumbnail_url);
+                        $('#demo2').empty();
+                        $.each(item.image_list, function (index, url) {
+                            $('#demo2').append(
+                                `<img src='${url}' alt='${index}' class="layui-upload-img">`
+                            )
+                        });
+                    }
+                    form.render();
+                },
+                error: function (xhr, type) {
+                    showErrorTips(type + '：' + xhr.statusText, xhr.status + ' 错误');
+                },
+                complete: function (xhr, status) {
+                    hideLoading();
+                }
+            });
+            $('#form_box').ajaxForm({
+                url: "/api/product/update",
+                beforeSubmit: checkForm,  // pre-submit callback
+                beforeSend: beforesend,
+                success: complete,  // post-submit callback
+                error: error_fun,
+                dataType: 'json'
+            });
+
+            function beforesend() {
+                showLoading();
+            }
+
+            function checkForm() {
+                return true;
+            }
+
+            function complete(data) {
+                if (data.code == 200) {
+                    showSuccessTips('更新成功！', '提示', function () {
+                        layer.closeAll("loading");
+                        parent.tab.changeTabsPage("carousel/list", "轮播列表");
+                    });
+                    return;
+                } else {
+                    showErrorTips(data.msg, '提示', function () {
+                        layer.closeAll("loading");
+                    });
+                }
+            }
+
+            function error_fun() {
+                showErrorTips('操作失败', '提示', function () {
+                    layer.closeAll("loading");
+                });
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "layout/tableLayout.html" %}
+{% block title %}意见反馈{% endblock %}
+{% block style %}
+<style type="text/css">
+    .layui-form-label {
+        width: 100px;
+    }
+
+    .layui-input-block {
+        margin-left: 130px;
+        width: 180px;
+    }
+
+    .layui-button-left {
+        margin-left: 50px;
+    }
+
+    tbody .layui-table-cell {
+        height: 80px;
+        line-height: 80px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+    <div class="layui-inline">
+        <label class="layui-form-label">联系方式：</label>
+        <div class="layui-input-block">
+            <input type="text" name="contact_information" lay-verify="contact_information" id="contact_information"
+                   autocomplete="off" placeholder="请输入联系方式" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-inline layui-button-left">
+        <button class="layui-btn layuiadmin-btn-order" lay-submit lay-filter="LAY-app-order-search">
+            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+        </button>
+    </div>
+</div>
+<div class="layui-card-body">
+    <table id="LAY-app-system-order" lay-filter="demo"></table>
+    <script type="text/html" id="table-system-order">
+        <a class="layui-btn layui-btn-danger  layui-btn-xs delect-show" lay-event="look">查看</a>
+    </script>
+</div>
+{% endblock %} {% block script %}
+<script>
+    var table, $, layer, element, form;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'layer', 'table', 'element'], function () {
+        $ = layui.$;
+        table = layui.table;
+        layer = layui.layer;
+        form = layui.form;
+        element = layui.element;
+        //回车监听搜索
+        $(document).on('keydown', function (e) {
+            if (e.keyCode == 13) {
+                $(".layuiadmin-btn-order").click();
+            }
+        })
+        //监听搜索
+        form.on('submit(LAY-app-order-search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('LAY-app-system-order', {
+                where: field
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+        //监听工具条("删除/编辑/设定角色")
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'look') {
+                show_edit(data._id)
+            }
+        });
+        //渲染table
+        table.render({
+            elem: '#LAY-app-system-order',
+            url: '/api/feedback/my_list',
+            cols: [[
+                {type: 'numbers'}
+                , {field: 'nickname', width: 150, title: '用户昵称', align: 'center'}
+                , {field: 'phone', width: 150, title: '注册手机', align: 'center'}
+                , {
+                    field: 'thumbnail', width: 120, title: '缩略图', align: 'center', templet: function (item) {
+                        return '<img src="' + item.thumbnail + '"width="80">'
+                    }
+                }
+
+                , {field: 'contact_information', width: 200, title: '联系方式(手机/微信号)', align: 'center'}
+                , {field: 'content', minWidth: 400, title: '内容', align: 'center'}
+                , {field: 'is_reply', minWidth: 150, title: '回复状态', align: 'center'}
+                , {field: 'created_time', width: 200, title: '创建时间', align: 'center'}
+                , {
+                    field: '_id',
+                    width: 100,
+                    title: '原文',
+                    align: 'center',
+                    fixed: 'right',
+                    toolbar: '#table-system-order'
+                }
+            ]],
+            response: { //定义后端 json 格式，详细参见官方文档
+                statusName: 'code', //状态字段名称
+                statusCode: '200', //状态字段成功值
+                msgName: 'msg', //消息字段
+                countName: 'count', //总数字段
+                dataName: 'list' //数据字段
+            },
+            page: true,
+            limit: 10,
+            limits: [10, 15, 20, 25, 30],
+            text: {
+                none: '暂无相关数据'
+            },
+            done: function () {
+                element.render('progress')
+            }
+        });
+        $("body").on("click", ".show-edit", function () {
+            var id = $(this).attr("data-id");
+            show_edit(id);
+        })
+
+    });
+    /**
+     * 编辑
+     */
+    function show_edit(_id) {
+        layer_show("查看详情", "/feedback/edit?_id=" + _id, '700', '500');
+    }
+</script>
+{% endblock %}

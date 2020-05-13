@@ -1,0 +1,164 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}新用户配置{% endblock %}
+{% block style %}
+    <style type="text/css">
+        .layui-form-label {
+            width: 170px;
+        }
+
+        .layui-input-block {
+            margin-left: 200px;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header">新用户配置</div>
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" action="" method="post" id="form_box">
+                    <div class="layui-form-item">
+
+                        <label class="layui-form-label">短信验证码</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="input_phonecode" id="input_phonecode" value=""
+                                   placeholder="手机验证码" class="layui-input" width="200px"
+                                   oninput="if(this.value.toString().length > 6)this.value = this.value.toString().slice(0,6)"/>
+                        </div>
+                        <div class="layui-input-inline" style="top: 8px;">
+                            <span onclick="getPhoneCode(this)" style="cursor:pointer;">获取验证码</span>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">新进用户奖励</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" value="1" name="status" id="status" lay-skin="switch" lay-text="开启奖励|关闭奖励">
+                            <input type="hidden" id="_id" name="_id">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">新进用户奖励描述</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="reward_des" id="reward_des"
+                                   lay-verify="reward_des"
+                                   autocomplete="off"
+                                   placeholder="请输入新用户的奖券描述" class="layui-input">
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">新进用户奖券奖励</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="coupon_reward_value" id="coupon_reward_value"
+                                   lay-verify="coupon_reward_value"
+                                   autocomplete="off"
+                                   value="0"
+                                   min="0"
+                                   placeholder="请输入新用户的奖券奖励" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">新进用户现金奖励</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="cash_reward_value" id="cash_reward_value"
+                                   lay-verify="cash_reward_value"
+                                   autocomplete="off"
+                                   value="0.0"
+                                   min="0"
+                                   placeholder="请输入新用户的现金奖励" class="layui-input" readonly>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-layout-admin">
+                        <div class="layui-input-block">
+                            <div class="layui-footer" style="left: 0;">
+                                <button class="layui-btn" lay-submit="" class="layui-btn"
+                                        lay-filter="component-form-demo1">保存修改
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        var layer;
+        layui.config({
+            base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form', 'laydate'], function () {
+            layer = layui.layer;
+            form = layui.form;
+
+            $.ajax({
+                type: 'get',
+                url: '/api/new_user_config/detail',
+                dataType: 'json',
+                beforeSend: function (xhr, settings) {
+                    showLoading();
+                },
+                success: function (data) {
+                    if (data.code != 200) {
+                        var login_callback = undefined;
+                        if (data.code == 230) {
+                            login_callback = login_address_jump;
+                        }
+                        //如果是未登录则进行跳转
+                        showErrorTips(data.msg, '错误提示', login_callback);
+                        return;
+                    } else {
+                        var item = data.data;
+                        $("#_id").val(item._id);
+                        $("#status").prop('checked', item.status || 0);
+                        $('#reward_des').val(item.reward_des);
+                        $('#coupon_reward_value').val(item.coupon_reward_value);
+                        $('#cash_reward_value').val(item.cash_reward_value);
+                        form.render();
+                    }
+                },
+                error: function (xhr, type) {
+                    showErrorTips(type + '：' + xhr.statusText, xhr.status + ' 错误');
+                },
+                complete: function (xhr, status) {
+                    hideLoading();
+                }
+            });
+
+            $('#form_box').ajaxForm({
+                url: "/api/new_user_config/update",
+                beforeSubmit: checkForm,  // pre-submit callback
+                success: complete,  // post-submit callback
+                error: error_fun,
+                dataType: 'json'
+            });
+
+            function checkForm() {
+                return true;
+            }
+
+            function complete(data) {
+                if (data.code == 200) {
+                    showSuccessTips('更新成功！', '提示', function () {
+                        location.reload(true)
+                    });
+                    return;
+                } else {
+                    showErrorTips(data.msg, '提示');
+                }
+            }
+
+            function error_fun(data) {
+                showErrorTips('操作失败', '提示');
+            }
+        });
+    </script>
+{% endblock %}

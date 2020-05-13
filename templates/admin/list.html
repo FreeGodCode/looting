@@ -1,0 +1,207 @@
+{% extends "layout/tableLayout.html" %}
+{% block title %}站点管理员{% endblock %}
+{% block style %}
+<style type="text/css">
+    .layui-form-label {
+        width: 100px;
+    }
+
+    .layui-input-block {
+        margin-left: 130px;
+        width: 180px;
+    }
+
+    .layui-button-left {
+        margin-left: 50px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+    <div class="layui-inline">
+        <label class="layui-form-label">账号</label>
+        <div class="layui-input-block">
+            <input type="text" name="username" lay-verify="username" id="username" autocomplete="off"
+                   placeholder="请输入登录账号" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <select name="status" id="status">
+                <option value="">请选择</option>
+                <option value="">请选择</option>
+                <option value="0">正常</option>
+                <option value="1">离职</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-block">
+            <input type="text" name="real_name" lay-verify="real_name" id="real_name" autocomplete="off"
+                   placeholder="请输入管理员姓名" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-inline layui-button-left">
+        <button class="layui-btn layuiadmin-btn-order" lay-submit lay-filter="LAY-app-order-search">
+            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+        </button>
+    </div>
+</div>
+<blockquote class="layui-elem-quote">
+    <a href="javascript:;" id="add" class="layui-btn layui-btn-small">
+        <i class="layui-icon">&#xe608;</i> 添加
+    </a>
+</blockquote>
+<div class="layui-card-body">
+    <table id="LAY-app-system-order" lay-filter="demo"></table>
+    <script type="text/html" id="table-system-order">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger  layui-btn-xs delect-show" lay-event="delete">删除</a>
+        <a class="layui-btn layui-btn-xs show-role" lay-event="role">设置角色</a>
+    </script>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    var table, $, layer, element, form;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'layer', 'table', 'element'], function () {
+        $ = layui.$;
+        table = layui.table;
+        layer = layui.layer;
+        form = layui.form;
+        element = layui.element;
+        //监听搜索
+        form.on('submit(LAY-app-order-search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('LAY-app-system-order', {
+                where: field
+            });
+        });
+        //监听工具条("删除/编辑/设定角色")
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                show_edit(data._id);
+            } else if (obj.event === 'delete') {
+                delect_show(data._id, obj);
+            } else if (obj.event === 'role') {
+                show_role(data._id);
+            }
+        });
+        //渲染table
+        table.render({
+            elem: '#LAY-app-system-order'
+            , url: '/api/admin/my_list' //模拟接口
+            , cols: [[
+                {type: 'numbers'}
+                , {field: 'username', width: 120, title: '账号', align: 'center'}
+                , {field: 'real_name', width: 120, title: '姓名', align: 'center'}
+                , {field: 'role_name', width: 100, title: '拥有角色', width: 500, align: 'center'}
+                , {field: 'status_name', title: '状态', width: 100, align: 'center'}
+                , {field: 'created_time', width: 200, title: '创建时间', align: 'center'}
+                , {field: 'lgoin_times', width: 120, title: '登录次数', align: 'center'}
+                , {field: 'lgoin_time_last', title: '最近登录时间', width: 200, align: 'center'}
+                , {
+                    field: '_id',
+                    title: '操作',
+                    align: 'center',
+                    width: 230,
+                    fixed: 'right',
+                    toolbar: '#table-system-order'
+                }
+            ]],
+            response: { //定义后端 json 格式，详细参见官方文档
+                statusName: 'code', //状态字段名称
+                statusCode: '200', //状态字段成功值
+                msgName: 'msg', //消息字段
+                countName: 'count', //总数字段
+                dataName: 'list' //数据字段
+            }
+            , page: true
+            , limit: 10
+            , limits: [10, 15, 20, 25, 30]
+            , text: {
+                none: '暂无相关数据'
+            }
+            , done: function () {
+                element.render('progress')
+            }
+
+        });
+
+        //添加
+        $("#add").on("click", function () {
+            show_page();
+        })
+        /**
+         * 删除
+         * @param {String}
+         * 表单id
+         */
+        function delect_show(_id, obj) {
+            layer.confirm('您确定要删除这个管理员吗?', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var params = {'_id': _id};
+                $.ajax({
+                    type: 'delete',
+                    url: '/api/admin/delete',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify(params),
+                    beforeSend: function (xhr, settings) {
+                        layer.load(1)
+                    },
+                    success: function (data) {
+                        layer.closeAll('loading');
+                        if (data.code != 200) {
+                            showErrorTips(data.msg, '错误提示');
+                            setTimeout(function () {
+                                window.parent.layer.closeAll("iframe");
+                            }, 2000)
+
+                        } else {
+                            showSuccessTips('删除成功！', '提示', function () {
+                                obj.del();
+                                //关闭所有iframe层
+                                window.parent.layer.closeAll("iframe");
+                            });
+                            return;
+                        }
+                    }
+
+                });
+            })
+        };
+
+        /**
+         * 添加
+         */
+        function show_page() {
+            layer_show("添加管理员", "/admin/add", '600', '500');
+        }
+
+        /**
+         * 编辑
+         */
+        function show_edit(_id) {
+            layer_show("编辑管理员", "/admin/edit?_id=" + _id, '600', '500');
+        }
+
+        /**
+         * 分配角色
+         */
+        function show_role(_id) {
+            layer_show("分配角色", "/admin/role?_id=" + _id, '600', '500');
+        }
+    });
+</script>
+{% endblock %}

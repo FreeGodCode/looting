@@ -1,0 +1,95 @@
+{% extends "layout/tableLayout.html" %}
+{% block title %}首页广告{% endblock %}
+{% block style %}
+<style type="text/css">
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+
+</div>
+<blockquote class="layui-elem-quote">
+</blockquote>
+<div class="layui-card-body">
+    <table id="LAY-app-system-order" lay-filter="demo"></table>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    var table, $, layer, element, form;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'layer', 'table', 'element'], function () {
+        $ = layui.$;
+        table = layui.table;
+        layer = layui.layer;
+        form = layui.form;
+        element = layui.element;
+        //监听搜索
+        form.on('submit(LAY-app-order-search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('LAY-app-system-order', {
+                where: field
+            });
+        });
+        //监听工具条("删除/编辑/设定角色")
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                show_edit(data._id);
+            }
+        });
+        //渲染table
+        table.render({
+            elem: '#LAY-app-system-order'
+            , url: '/api/statistical/ad_list' //模拟接口
+            , cols: [[
+                {field: 'today_str', width: 130, title: '日期', align: 'center'}
+                , {field: 'home_ad_total_all', width: 150, title: '首页广告位总点击次数', align: 'center'}
+                , {field: 'home_ad_user_num_total', width: 150, title: '首页广告位总点击用户数', align: 'center'}
+                , {field: 'home_ad_user_num_average_all', width: 130, title: '用户平均点击数', align: 'center'}
+
+                , {field: 'home_ad_total1', width: 150, title: '第一位点击次数', align: 'center'}
+                , {field: 'home_ad_user_num1', width: 160, title: '第一位点击用户数', align: 'center'}
+                , {field: 'home_ad_user_num_average1', width: 200, title: '第一位点击平均数', align: 'center'}
+
+                , {field: 'home_ad_total2', width: 150, title: '第二位点击次数', align: 'center'}
+                , {field: 'home_ad_user_num2', width: 160, title: '第二位点击用户数', align: 'center'}
+                , {field: 'home_ad_user_num_average2', width: 200, title: '第二位点击平均数', align: 'center'}
+
+                , {field: 'home_ad_total3', width: 150, title: '第三位点击次数', align: 'center'}
+                , {field: 'home_ad_user_num3', width: 160, title: '第三位点击用户数', align: 'center'}
+                , {field: 'home_ad_user_num_average3', width: 200, title: '第三位点击平均数', align: 'center'}
+
+                , {field: 'home_ad_total4', width: 150, title: '第四位点击次数', align: 'center'}
+                , {field: 'home_ad_user_num4', width: 160, title: '第四位点击用户数', align: 'center'}
+                , {field: 'home_ad_user_num_average4', width: 200, title: '第四位点击平均数', align: 'center'}
+            ]],
+            response: { //定义后端 json 格式，详细参见官方文档
+                statusName: 'code', //状态字段名称
+                statusCode: '200', //状态字段成功值
+                msgName: 'msg', //消息字段
+                countName: 'count', //总数字段
+                dataName: 'list' //数据字段
+            }
+            , page: true
+            , limit: 15
+            , limits: [10, 15, 20, 25, 30, 50]
+            , text: {
+                none: '暂无相关数据'
+            }
+            , done: function () {
+                element.render('progress')
+            }
+        });
+        $("#add").on("click", function () {
+            show_page();
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,174 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}订单发货{% endblock %}
+{% block style %}
+    <style type="text/css">
+        .layui-form-label {
+            width: 180px;
+        }
+
+        .layui-input-block {
+            margin-left: 210px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div style="margin: 15px;">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>订单发货</legend>
+        </fieldset>
+
+        <form class="layui-form" id="form_box" method="post">
+            {#            <div class="layui-form-item">#}
+            {#                <label class="layui-form-label">短信验证码</label>#}
+            {#                <div class="layui-input-inline">#}
+            {#                    <input type="number" name="input_phonecode" id="input_phonecode" value=""#}
+            {#                           placeholder="手机验证码" class="layui-input" width="200px"#}
+            {#                           oninput="if(this.value.toString().length > 6)this.value = this.value.toString().slice(0,6)"/>#}
+            {#                </div>#}
+            {#                <div class="layui-input-inline" style="top: 8px;">#}
+            {#                    <span onclick="getPhoneCode(this)" style="cursor:pointer;">获取验证码</span>#}
+            {#                </div>#}
+            {#            </div>#}
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="c-red em">*</span>订单号</label>
+                <div class="layui-input-block">
+                    <input type="text" id="order_num" autocomplete="off"
+                           placeholder="订单号" class="layui-input" readonly="readonly">
+                    <input type="hidden" name="_id" id="_id">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="c-red em">*</span>商品名称</label>
+                <div class="layui-input-block">
+                    <input type="text" id="title" autocomplete="off"
+                           placeholder="商品名称" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品缩略图</label>
+                <div class="layui-input-block">
+                    <div style="width: 90px;height: 90px;line-height: 90px;text-align: center;"><img id="img_url_img"
+                                                                                                     src="" width="90">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="c-red em">*</span>收件人</label>
+                <div class="layui-input-block">
+                    <input type="text" id="consignee_name" autocomplete="off"
+                           placeholder="收件人" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="c-red em">*</span>收件人手机</label>
+                <div class="layui-input-block">
+                    <input type="text" id="consignee_mobile" autocomplete="off"
+                           placeholder="收件人手机" class="layui-input" readonly="readonly">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="c-red em">*</span>运单号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="waybill_num" id="waybill_num" autocomplete="off"
+                           placeholder="请输入运单号" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="submit" class="layui-btn" id="demo1" value="立即提交">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        var $, form;
+        layui.config({
+            base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form'], function () {
+            $ = layui.$;
+            form = layui.form;
+            $.ajax({
+                type: 'get',
+                url: '/api/order/detail?_id=' + '{{_id}}',
+                dataType: 'json',
+                beforeSend: function (xhr, settings) {
+                    showLoading();
+                },
+                success: function (data) {
+                    if (data.code != 200) {
+                        var login_callback = undefined;
+                        if (data.code == 230) {
+                            login_callback = login_address_jump;
+                        }
+                        //如果是未登录则进行跳转
+                        showErrorTips(data.msg, '错误提示', login_callback);
+                        return;
+                    } else {
+                        var item = data.data;
+                        $("#_id").val(item._id);
+                        $("#order_num").val(item.order_num);
+                        $("#title").val(item.title);
+                        $("#img_url_img").attr('src',item.thumbnail_url);
+                        $("#consignee_name").val(item.consignee_name);
+                        $("#consignee_mobile").val(item.consignee_mobile);
+                        $("#waybill_num").val(item.waybill_num);
+                    }
+                },
+                error: function (xhr, type) {
+                    showErrorTips(type + '：' + xhr.statusText, xhr.status + ' 错误');
+                },
+                complete: function (xhr, status) {
+                    hideLoading();
+                }
+            });
+            $('#form_box').ajaxForm({
+                url: "/api/order/sent",
+                beforeSubmit: checkForm,  // pre-submit callback
+                beforeSend: beforesend,
+                success: complete,  // post-submit callback
+                error: error_fun,
+                dataType: 'json'
+            });
+
+            function beforesend() {
+                showLoading();
+            }
+
+            function checkForm() {
+                return true;
+            }
+
+            function complete(data) {
+                if (data.code == 200) {
+                    showSuccessTips('添加成功！', '提示', function () {
+                        //iframe页面
+                        layer.closeAll("loading");
+                        parent.location.reload();
+                    });
+                    return;
+                } else {
+                    showErrorTips(data.msg, '提示', function () {
+                        layer.closeAll("loading");
+                    });
+                }
+            }
+
+            function error_fun() {
+                showErrorTips('操作失败', '提示', function () {
+                    layer.closeAll("loading");
+                });
+            }
+        });
+
+    </script>
+{% endblock %}

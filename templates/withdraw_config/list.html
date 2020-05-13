@@ -1,0 +1,420 @@
+{% extends "layout/tableLayout.html" %}
+{% block title %}提现配置{% endblock %}
+{% block style %}
+    <style type="text/css">
+        .layui-form-label {
+            width: 100px;
+        }
+
+        .layui-input-block {
+            margin-left: 130px;
+            width: 180px;
+        }
+
+        .layui-button-left {
+            margin-left: 50px;
+        }
+
+        tbody .layui-table-cell {
+            min-height: 55px;
+            line-height: 55px;
+        }
+
+        td a {
+            text-decoration: underline;
+            color: blue;
+        }
+
+        .layui-table-view .layui-table td[data-field^="title"] > div.layui-table-cell {
+            line-height: 18px !important;
+            text-overflow: inherit !important;
+            word-break: break-all;
+            overflow: auto;
+            white-space: normal;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+
+    <div style="padding: 20px; background-color: #F2F2F2;">
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-collapse" lay-filter="test">
+                <div class="layui-colla-item layui-card">
+                    <h2 class="layui-colla-title">手续费配置</h2>
+                    <div class="layui-colla-content">
+                        <form class="layui-form" id="form_box" method="post">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">手续费</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="service_charge" id="service_charge"
+                                           lay-verify="service_charge"
+                                           autocomplete="off"
+                                           placeholder="请输入提现手续费"
+                                           class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">计算方式</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" value="1" id="is_rate" name="is_rate" lay-skin="switch"
+                                           lay-text="百分比|固定值">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">支付包</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" value="1" name="enable_alipay" id="enable_alipay"
+                                           lay-skin="switch"
+                                           lay-text="开启|关闭">
+                                    <input type="checkbox" value="1" name="display_alipay" id="display_alipay"
+                                           lay-skin="switch"
+                                           lay-text="显示|隐藏">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">微信支付</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" value="1" name="enable_wechat_pay" id="enable_wechat_pay"
+                                           lay-skin="switch"
+                                           lay-text="开启|关闭">
+                                    <input type="checkbox" value="1" name="display_wechat_pay" id="display_wechat_pay"
+                                           lay-skin="switch"
+                                           lay-text="显示|隐藏">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <div class="layui-footer" style="left: 0;">
+                                        <button class="layui-btn" lay-submit="" id="demo1"
+                                                lay-filter="component-form-demo1">立即提交
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-collapse">
+                <div class="layui-colla-item layui-card">
+                    <div class="layui-colla-title">分类列表</div>
+                    <div class="layui-colla-content layui-card-body">
+                        <blockquote class="layui-elem-quote">
+                            <a href="javascript:;" id="add_class" class="layui-btn layui-btn-small">
+                                <i class="layui-icon">&#xe608;</i> 添加
+                            </a>
+                        </blockquote>
+                        <div class="layui-card-body">
+                            <table id="LAY-app-system-order-2" lay-filter="demo2"></table>
+                            <script type="text/html" id="table-system-order-2">
+                                <a class="layui-btn layui-btn-danger  layui-btn-xs delect-show"
+                                   lay-event="delete">删除</a>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-collapse">
+                <div class="layui-colla-item layui-card">
+                    <div class="layui-colla-title">金额列表</div>
+                    <div class="layui-colla-content layui-card-body">
+                        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">任务名字：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="name" id="name" autocomplete="off"
+                                           placeholder="请输入任务名字"
+                                           class="layui-input">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline layui-button-left">
+                                <button class="layui-btn layuiadmin-btn-order" lay-submit
+                                        lay-filter="LAY-app-order-search">
+                                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <blockquote class="layui-elem-quote">
+                            <a href="javascript:;" id="add" class="layui-btn layui-btn-small">
+                                <i class="layui-icon">&#xe608;</i> 添加
+                            </a>
+                        </blockquote>
+                        <div class="layui-card-body">
+                            <table id="LAY-app-system-order" lay-filter="demo"></table>
+                            <script type="text/html" id="table-system-order">
+                                <a class="layui-btn layui-btn-xs"
+                                   lay-event="edit">编辑</a>
+                                <a class="layui-btn layui-btn-danger  layui-btn-xs delect-show"
+                                   lay-event="delete">删除</a>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script src="{{ url_for('login.static', filename='js/jquery.min.js') }}" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="{{ url_for('login.static', filename='js/jquery-form.js') }}" type="text/javascript"
+            charset="utf-8"></script>
+    <script>
+        var table, $, layer, element, form;
+        layui.config({
+            base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'layer', 'table', 'element'], function () {
+            $ = layui.$;
+            table = layui.table;
+            layer = layui.layer;
+            form = layui.form;
+            element = layui.element;
+
+
+            $('#form_box').ajaxForm({
+                url: "/api/withdraw_config/option_update",
+                method: 'put',
+                beforeSubmit: checkForm,  // pre-submit callback
+                beforeSend: beforesend,
+                success: complete,  // post-submit callback
+                error: error_fun,
+                dataType: 'json'
+            });
+
+            $.ajax({
+                type: 'get',
+                url: '/api/withdraw_config/option_detail',
+                dataType: 'json',
+                beforeSend: function (xhr, settings) {
+                    showLoading();
+                },
+                success: function (data) {
+                    if (data.code != 200) {
+                        var login_callback = undefined;
+                        if (data.code == 230) {
+                            login_callback = login_address_jump;
+                        }
+                        //如果是未登录则进行跳转
+                        showErrorTips(data.msg, '错误提示', login_callback);
+                        return;
+                    } else {
+                        var item = data.data;
+                        $("#service_charge").val(item.service_charge);
+                        $("#is_rate").prop('checked', item.is_rate || 0);
+                        $("#enable_alipay").prop('checked', item.enable_alipay || 0);
+                        $("#display_alipay").prop('checked', item.display_alipay || 0);
+                        $("#enable_wechat_pay").prop('checked', item.enable_wechat_pay || 0);
+                        $("#display_wechat_pay").prop('checked', item.display_wechat_pay || 0);
+                    }
+                    form.render();
+                },
+                error: function (xhr, type) {
+                    showErrorTips(type + '：' + xhr.statusText, xhr.status + ' 错误');
+                },
+                complete: function (xhr, status) {
+                    hideLoading();
+                }
+            });
+
+            function beforesend() {
+                showLoading();
+            }
+
+            function checkForm() {
+                return true;
+            }
+
+            function complete(data) {
+                if (data.code == 200) {
+                    showSuccessTips('更新成功！', '提示', function () {
+                        layer.closeAll("loading");
+                    });
+                } else {
+                    showErrorTips(data.msg, '提示', function () {
+                        layer.closeAll("loading");
+                    });
+                }
+            }
+
+            function error_fun() {
+                showErrorTips('操作失败', '提示', function () {
+                    layer.closeAll("loading");
+                });
+            }
+
+            //监听搜索
+            form.on('submit(LAY-app-order-search)', function (data) {
+                var field = data.field;
+                //执行重载
+                table.reload('LAY-app-system-order', {
+                    where: field
+                });
+            });
+
+
+            //监听工具条("删除/编辑/设定角色")
+            table.on('tool(demo2)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    parent.tab.addTabsPage("/withdraw_config/edit?_id=" + data._id, "编辑日常任务")
+
+                } else if (obj.event === 'delete') {
+                    delect_show(data._id, obj);
+                }
+            });
+
+            //监听工具条("删除/编辑/设定角色")
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    layer_show("编辑日常任务", "/withdraw_config/edit?_id=" + data._id, '600', '400');
+
+                } else if (obj.event === 'delete') {
+                    delect_show(data._id, obj);
+                }
+            });
+
+
+            //渲染table
+            table.render({
+                elem: '#LAY-app-system-order-2'
+                , url: '/api/withdraw_config/class_list' //模拟接口
+                , cols: [[
+                    {field: 'name', title: '分类名称', align: 'center'}
+                    , {field: 'limit_num', title: '限制次数', align: 'center'}
+                    , {field: 'daily_limit_num', title: '每日现在次数', align: 'center'}
+                    , {
+                        field: '_id',
+                        width: 200,
+                        title: '操作',
+                        align: 'center',
+                        fixed: 'right',
+                        toolbar: '#table-system-order-2'
+                    }
+                ]],
+                response: { //定义后端 json 格式，详细参见官方文档
+                    statusName: 'code', //状态字段名称
+                    statusCode: '200', //状态字段成功值
+                    msgName: 'msg', //消息字段
+                    countName: 'count', //总数字段
+                    dataName: 'list' //数据字段
+                }
+                , page: true
+                , limit: 10
+                , limits: [10, 15, 20, 25, 30]
+                , text: {
+                    none: '暂无相关数据'
+                }
+                , done: function () {
+                    element.render('progress')
+                }
+            });
+
+            //渲染table
+            table.render({
+                elem: '#LAY-app-system-order'
+                , url: '/api/withdraw_config/my_list' //模拟接口
+                , cols: [[
+                    {field: 'class_name', title: '分类名称', align: 'center'}
+                    , {field: 'value', title: '金额', align: 'center'}
+                    , {
+                        field: 'status', title: '状态', align: 'center',
+                        templet: function (item) {
+                            return `<input type="checkbox" ${item.status && 'checked'} value="1" lay-skin="switch" lay-text="允许|禁止">`
+                        }
+                    }
+                    , {
+                        field: '_id',
+                        width: 200,
+                        title: '操作',
+                        align: 'center',
+                        fixed: 'right',
+                        toolbar: '#table-system-order'
+                    }
+                ]],
+                response: { //定义后端 json 格式，详细参见官方文档
+                    statusName: 'code', //状态字段名称
+                    statusCode: '200', //状态字段成功值
+                    msgName: 'msg', //消息字段
+                    countName: 'count', //总数字段
+                    dataName: 'list' //数据字段
+                }
+                , page: true
+                , limit: 10
+                , limits: [10, 15, 20, 25, 30]
+                , text: {
+                    none: '暂无相关数据'
+                }
+                , done: function () {
+                    element.render('progress')
+                }
+            });
+
+            $("#add_class").on("click", function () {
+                layer_show("添加提现分类", "/withdraw_config/class_add", '600', '400');
+            });
+
+            $("#add").on("click", function () {
+                layer_show("添加提现金额", "/withdraw_config/add", '600', '300');
+            });
+
+
+        });
+
+        /**
+         * 删除
+         * @param {String}
+         * 表单id
+         */
+        function delect_show(_id, obj) {
+            layer.confirm('您确定要删除吗?', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    var params = {'_id': _id};
+                    $.ajax({
+                        type: 'post',
+                        url: '/api/daily_task/delete',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(params),
+                        beforeSend: function (xhr, settings) {
+                            showLoading();
+                        },
+                        success: function (data) {
+                            layer.closeAll("loading");
+                            if (data.code != 200) {
+                                showErrorTips(data.msg, '错误提示');
+                                window.parent.layer.closeAll('iframe');
+
+                            } else {
+                                showSuccessTips('删除成功！', '提示', function () {
+                                    //关闭所有iframe层
+                                    window.parent.layer.closeAll('iframe');
+                                    obj.del();
+                                });
+                                return;
+                            }
+                        }
+
+                    });
+                }
+            )
+        };
+
+    </script>
+{% endblock %}

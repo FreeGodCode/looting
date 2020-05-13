@@ -1,0 +1,171 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}编辑用户等级{% endblock %}
+{% block style %}
+    <style type="text/css">
+        .layui-form-label {
+            width: 180px;
+        }
+
+        .layui-input-block {
+            margin-left: 210px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div style="margin: 15px;">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>编辑用户等级</legend>
+        </fieldset>
+        <form class="layui-form" id="form_box" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">短信验证码</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="input_phonecode" id="input_phonecode" value=""
+                           placeholder="手机验证码" class="layui-input" width="200px"
+                           oninput="if(this.value.toString().length > 6)this.value = this.value.toString().slice(0,6)"/>
+                </div>
+                <div class="layui-input-inline" style="top: 8px;">
+                    <span onclick="getPhoneCode(this)" style="cursor:pointer;">获取验证码</span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="c-red em">*</span>用户等级</label>
+                <div class="layui-input-block">
+                    <select name="level_id" id="level_id" required>
+                        <option value="" selected>请选择</option>
+                    </select>
+                    <input type="hidden" name="_id" id="_id">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品限购数量</label>
+                <div class="layui-input-block">
+                    <input type="number" name="cost_limit_num" id="cost_limit_num" value="1" autocomplete="off"
+                           placeholder="请输入商品限购数量" min="0" class="layui-input" required>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <input type="submit" class="layui-btn" id="demo1" value="立即提交">
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        var $, form;
+        layui.config({
+            base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form'], function () {
+            $ = layui.$;
+            form = layui.form;
+
+            show_user_level();
+
+            $.ajax({
+                type: 'get',
+                url: '/api/daily_new_config/detail?_id=' + '{{_id}}',
+                dataType: 'json',
+                beforeSend: function (xhr, settings) {
+                    showLoading();
+                },
+                success: function (data) {
+                    if (data.code != 200) {
+                        var login_callback = undefined;
+                        if (data.code == 230) {
+                            login_callback = login_address_jump;
+                        }
+                        //如果是未登录则进行跳转
+                        showErrorTips(data.msg, '错误提示', login_callback);
+                        return;
+                    } else {
+                        var item = data.data;
+                        $("#_id").val(item._id);
+                        $("#level_id").val(item.level_id);
+                        $("#cost_limit_num").val(item.cost_limit_num);
+                    }
+                },
+                error: function (xhr, type) {
+                    showErrorTips(type + '：' + xhr.statusText, xhr.status + ' 错误');
+                },
+                complete: function (xhr, status) {
+                    hideLoading();
+                }
+            });
+            $('#form_box').ajaxForm({
+                url: "/api/daily_new_config/update",
+                beforeSubmit: checkForm,  // pre-submit callback
+                beforeSend: beforesend,
+                success: complete,  // post-submit callback
+                error: error_fun,
+                dataType: 'json'
+            });
+
+            function checkForm() {
+
+                return true;
+            }
+
+            function beforesend() {
+                showLoading();
+            }
+
+            function complete(data) {
+                if (data.code == 200) {
+                    showSuccessTips('更新成功！', '提示', function () {
+                        parent.location.reload();
+                        //iframe页面
+                        layer.closeAll("loading");
+                    });
+                    return;
+                } else {
+                    showErrorTips(data.msg, '提示', function () {
+                        layer.closeAll("loading");
+                    });
+                }
+            }
+
+            function error_fun() {
+                showErrorTips('操作失败', '提示', function () {
+                    layer.closeAll("loading");
+                });
+            }
+
+            function show_user_level() {
+                $.ajax({
+                    url: '{{ url_for('user_level_config_api.my_list') }}',
+                    type: 'get',
+                    data: {'limit': 1000, 'status': 1},
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code != 200) {
+                            var login_callback = undefined;
+                            if (data.code == 230) {
+                                login_callback = login_address_jump;
+                            }
+                            //如果是未登录则进行跳转
+                            showErrorTips(data.msg, '错误提示', login_callback);
+                            return;
+                        } else {
+                            var option_html = '';
+                            for (var i = 0; i < data.data.list.length; i++) {
+                                var item = data.data.list[i];
+                                option_html += '<option value="' + item._id + '">' + item.name + '</option>';
+                            }
+                            $('#level_id').append(option_html);
+                            form.render();
+                        }
+                    },
+                    fail: function (e) {
+                        console.error(e);
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

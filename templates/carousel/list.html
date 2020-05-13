@@ -1,0 +1,208 @@
+{% extends "layout/tableLayout.html" %}
+{% block title %}轮播列表{% endblock %}
+{% block style %}
+    <style type="text/css">
+        .layui-form-label {
+            width: 100px;
+        }
+
+        .layui-input-block {
+            margin-left: 130px;
+            width: 180px;
+        }
+
+        .layui-button-left {
+            margin-left: 50px;
+        }
+
+        tbody .layui-table-cell {
+            min-height: 50px;
+            line-height: 50px;
+        }
+
+        td a {
+            text-decoration: underline;
+            color: blue;
+        }
+
+        .layui-table-view .layui-table td[data-field^="title"] > div.layui-table-cell {
+            line-height: 18px !important;
+            text-overflow: inherit !important;
+            word-break: break-all;
+            overflow: auto;
+            white-space: normal;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+
+        <div class="layui-inline">
+            <label class="layui-form-label">名字：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" lay-verify="name" id="name" autocomplete="off" placeholder="请输入轮播名字"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+                <select name="genre" id="genre">
+                    <option value="">请选择</option>
+                    <option value="0">本身内容</option>
+                    <option value="1">APP内页</option>
+                    <option value="2">H5地址</option>
+                    <option value="3">文档类型</option>
+
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <select name="status" id="status">
+                    <option value="">请选择</option>
+                    <option value="1">显示</option>
+                    <option value="-1">隐藏</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline layui-button-left">
+            <button class="layui-btn layuiadmin-btn-order" lay-submit lay-filter="LAY-app-order-search">
+                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+            </button>
+        </div>
+    </div>
+    <blockquote class="layui-elem-quote">
+        <a href="javascript:;" id="add" class="layui-btn layui-btn-small">
+            <i class="layui-icon">&#xe608;</i> 添加
+        </a>
+    </blockquote>
+    <div class="layui-card-body">
+        <table id="LAY-app-system-order" lay-filter="demo"></table>
+        <script type="text/html" id="table-system-order">
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger  layui-btn-xs delect-show" lay-event="delete">删除</a>
+        </script>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        var table, $, layer, element, form;
+        layui.config({
+            base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'layer', 'table', 'element'], function () {
+            $ = layui.$;
+            table = layui.table;
+            layer = layui.layer;
+            form = layui.form;
+            element = layui.element;
+            //监听搜索
+            form.on('submit(LAY-app-order-search)', function (data) {
+                var field = data.field;
+                //执行重载
+                table.reload('LAY-app-system-order', {
+                    where: field
+                });
+            });
+            //监听工具条("删除/编辑/设定角色")
+            table.on('tool(demo)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    parent.tab.addTabsPage("/carousel/edit?_id=" + data._id, "编辑轮播")
+
+                } else if (obj.event === 'delete') {
+                    delect_show(data._id, obj);
+                }
+            });
+            //渲染table
+            table.render({
+                elem: '#LAY-app-system-order'
+                , url: '/api/carousel/my_list' //模拟接口
+                , cols: [[
+                    {field: 'name', title: '轮播名字', align: 'center'}
+                    , {
+                        field: 'thumbnail', title: '轮播图', align: 'center', templet: function (item) {
+                            return '<img src="' + item.img_url + '"width="120">'
+                        }
+                    }
+                    , {field: 'route_name', title: '路由名称', align: 'center'}
+                    , {field: 'genre_name', title: '类型', align: 'center'}
+                    , {field: 'sort_id', title: '排序值', align: 'center'}
+                    , {field: 'status_name', title: '状态', align: 'center'}
+                    , {field: 'remark', title: '备注', align: 'center'}
+                    , {field: '_id', title: '操作', align: 'center', fixed: 'right', toolbar: '#table-system-order'}
+                ]],
+                response: { //定义后端 json 格式，详细参见官方文档
+                    statusName: 'code', //状态字段名称
+                    statusCode: '200', //状态字段成功值
+                    msgName: 'msg', //消息字段
+                    countName: 'count', //总数字段
+                    dataName: 'list' //数据字段
+                }
+                , page: true
+                , limit: 10
+                , limits: [10, 15, 20, 25, 30]
+                , text: {
+                    none: '暂无相关数据'
+                }
+                , done: function () {
+                    element.render('progress')
+                }
+            });
+            $("#add").on("click", function () {
+                parent.tab.addTabsPage("/carousel/add?", "添加轮播")
+            });
+
+
+        });
+
+        /**
+         * 删除
+         * @param {String}
+         * 表单id
+         */
+        function delect_show(_id, obj) {
+            layer.confirm('您确定要删除吗?', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    var params = {'_id': _id};
+                    $.ajax({
+                        type: 'post',
+                        url: '/api/carousel/delete',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify(params),
+                        beforeSend: function (xhr, settings) {
+                            showLoading();
+                        },
+                        success: function (data) {
+                            layer.closeAll("loading");
+                            if (data.code != 200) {
+                                showErrorTips(data.msg, '错误提示');
+                                window.parent.layer.closeAll('iframe');
+
+                            } else {
+                                showSuccessTips('删除成功！', '提示', function () {
+                                    //关闭所有iframe层
+                                    window.parent.layer.closeAll('iframe');
+                                    obj.del();
+                                });
+                                return;
+                            }
+                        }
+
+                    });
+                }
+            )
+        }
+        ;
+    </script>
+{% endblock %}

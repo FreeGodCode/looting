@@ -1,0 +1,249 @@
+{% extends "layout/tableLayout.html" %}
+{% block title %}提现排行榜列表{% endblock %}
+{% block style %}
+<style type="text/css">
+    .layui-form-label {
+        width: 100px;
+    }
+
+    .layui-input-block {
+        margin-left: 130px;
+        width: 180px;
+    }
+
+    .layui-button-left {
+        margin-left: 50px;
+    }
+
+    .layui-inline {
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="layui-form layui-card-header layuiadmin-card-header-auto">
+    <div class="layui-inline">
+        <label class="layui-form-label">昵称：</label>
+        <div class="layui-input-block">
+            <input type="text" name="nickname" lay-verify="nickname" id="nickname" autocomplete="off"
+                   placeholder="请输入用户昵称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">绑定手机：</label>
+        <div class="layui-input-block">
+            <input type="number" name="phone" lay-verify="phones" id="phone" autocomplete="off"
+                   placeholder="请输入用户绑定的手机号"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">状态：</label>
+        <div class="layui-input-block">
+            <select name="status" id="status">
+                <option value="">请选择</option>
+                <option value="-1">封禁</option>
+                <option value="0">正常</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-inline layui-button-left">
+        <button class="layui-btn layuiadmin-btn-order" lay-submit lay-filter="LAY-app-order-search">
+            搜索
+        </button>
+    </div>
+</div>
+
+<div class="layui-card-body">
+    <table id="LAY-app-system-order" lay-filter="demo"></table>
+    <script type="text/html" id="table-system-order">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</a>
+    </script>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    var table, $, layer, element, form;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'layer', 'table', 'element'], function () {
+        $ = layui.$;
+        table = layui.table;
+        layer = layui.layer;
+        form = layui.form;
+        element = layui.element;
+        //回车监听搜索
+        $(document).on('keydown', function (e) {
+            if (e.keyCode == 13) {
+                $(".layuiadmin-btn-order").click();
+            }
+        })
+        //监听搜索
+        form.on('submit(LAY-app-order-search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('LAY-app-system-order', {
+                where: field
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+        //监听工具条("删除/编辑/设定角色")
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+                show_edit(data._id);
+            }
+
+        });
+        //点击邀请码
+        $("body").on("click", ".show-user-invite", function () {
+            var id = $(this).attr("data-id");
+            var data_name = $(this).attr("data-name");
+            parent.tab.addTabsPage("/user/list?invite_id=" + id, "邀请列表_" + data_name)
+        });
+        //渲染table
+        table.render({
+            elem: '#LAY-app-system-order'
+            , url: '/api/leaderboard_withdraw/my_list'//模拟接口
+            , cols: [[
+                {
+                    field: 'type_number', title: '昵称', align: 'center', templet: function (item) {
+                    return '<div style="word-break:break-all;"><a href="javascript:;" data-id="' + item.user_id + '" data-name="' + item.nickname + '" class="show-user" style="color:blue;">' + item.nickname + '</a></div>';
+
+                }
+                }
+                , {field: 'phone', title: '绑定手机号', align: 'center'}
+                , {field: 'withdraw_value', title: '提现金额', align: 'center'}
+                , {field: 'balance', title: '当前余额', align: 'center'}
+                , {
+                    field: 'reg_time', title: '注册时间', width: 200, align: 'center', templet: function (item) {
+                        if (item.reg_time) {
+                            return item.reg_time;
+                        } else {
+                            return '-';
+                        }
+                    }
+                }
+                , {
+                    field: 'arithmetic_force_count',
+                    width: 100,
+                    title: '状态',
+                    align: 'center',
+                    templet: function (item) {
+                        if (item.status == 0) {
+                            return '<span style="color: red;">正常</span>';
+                        } else {
+                            return '<span style="color: orange;">封禁</span>';
+                        }
+                    }
+                }
+//                , {
+//                    field: '_id',
+//                    title: '操作',
+//                    align: 'center',
+//                    width: 80,
+//                    fixed: 'right',
+//                    toolbar: '#table-system-order'
+//                }
+            ]],
+            response: { //定义后端 json 格式，详细参见官方文档
+                statusName: 'code', //状态字段名称
+                statusCode: '200', //状态字段成功值
+                msgName: 'msg', //消息字段
+                countName: 'count', //总数字段
+                dataName: 'list' //数据字段
+            }
+            , page: true
+            , limit: 20
+            , limits: [10, 15, 20, 25, 30]
+            , text: {
+                none: '暂无相关数据'
+            }
+            , done: function () {
+                element.render('progress')
+            }
+        });
+        $("#add").on("click", function () {
+            show_page();
+        });
+        $("#delete").on("click", function () {
+            delect_show();
+        });
+        $("body").on("click", ".show-user", function () {
+            var id = $(this).attr("data-id");
+            var data_name = $(this).attr("data-name");
+            parent.tab.addTabsPage("/user/list?invite_id=" + id, "邀请列表_" + data_name)
+        });
+    });
+
+    /**
+     * 添加
+     */
+    function show_page() {
+        layer_show("添加", "/leaderboard/add", '500', '400');
+    }
+    /**
+     * 编辑
+     */
+    function show_edit(_id) {
+        layer_show("编辑", "/leaderboard/edit?_id=" + _id, '500', '400');
+    }
+    /**
+     * 清除数据
+     */
+    function delect_show() {
+        layer.confirm('您确定要清除这些数据吗?', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            var params = {};
+            $.ajax({
+                type: 'delete',
+                url: '/api/leaderboard/delete',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                data: JSON.stringify(params),
+                beforeSend: function (xhr, settings) {
+                    layer.load(1)
+                },
+                success: function (data) {
+                    layer.closeAll('loading');
+                    if (data.code != 200) {
+                        showErrorTips(data.msg, '错误提示');
+                        setTimeout(function () {
+                            window.parent.layer.closeAll("iframe");
+                        }, 2000)
+                    } else {
+                        showSuccessTips('删除成功！', '提示', function () {
+                            //关闭所有iframe层
+                            window.parent.layer.closeAll('iframe');
+                            location.reload();
+                        });
+                        return;
+                    }
+                }
+
+            });
+        })
+    }
+    ;
+    /**
+     * 导出文件
+     */
+    function export_file() {
+        var params = {};
+        params.export = 'true';
+        params.page_num = 1;
+        params.limit = 1000000000;
+        var url = '/api/leaderboard/my_list?';
+        for (var i in params) {
+            url += i + '=' + params[i] + '&';
+        }
+        url = url.substring(0, url.length - 1);
+        window.open(url);
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>图表统计</title>
+    <script src="{{ url_for('login.static', filename='plugins/echarts/echarts.min.js') }}" type="text/javascript"
+            charset="utf-8"></script>
+    <link rel="stylesheet"
+          href="{{ url_for('login.static', filename='plugins/layuiadmin/dist/layuiadmin/layui/css/layui.css') }}"
+          media="all">
+</head>
+<body>
+<div class="layui-tab layui-tab-brief" lay-filter="changeTab">
+
+    <div class="layui-tab-content">
+        <div id="chart_zx" style="width: 100%;height:600px; padding-top: 30px;"></div>
+    </div>
+</div>
+
+<script src="{{ url_for('login.static', filename='plugins/layuiadmin/dist/layuiadmin/layui/layui.js') }}"></script>
+<script type="text/javascript">
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('chart_zx'));
+    myChart.setOption({
+        title: {
+            text: '按天统计表'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+
+        legend: {
+            data: ['当天提现总额', '当天用户领取的总红包', '用户的总余额']
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                boundaryGap: false,
+                data: []
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+
+            {
+                name: '用户平均抢红包数',
+                type: 'line',
+                smooth: 0.3,
+                data: []
+            },
+            {
+                name: '当天提现总额',
+                type: 'line',
+                smooth: 0.3,
+                data: []
+            },
+            {
+                name: '当天抢红包数量',
+                type: 'line',
+                smooth: 0.3,
+                data: []
+            },
+            {
+                name: '当天用户领取的总红包',
+                type: 'line',
+                smooth: 0.3,
+                data: []
+            },
+            {
+                name: '用户的总余额',
+                type: 'line',
+                smooth: 0.3,
+                data: []
+            }
+        ]
+    });
+
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['element', 'layer', 'jquery'], function () {
+        var element = layui.element,
+                layer = layui.layer,
+                $ = layui.jquery;
+
+        var load_index;
+
+        /**
+         * 获取图标数据
+         * @param {string} cate: 数据类别
+         */
+        function getChartData() {
+            $.ajax({
+                url: '/api/statistical/get_red_day',
+                type: 'GET',
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                beforeSend: function (xhr) {
+                    load_index = layer.load(1, {shade: [0.4, '#000']}); //0代表加载的风格，支持0-2
+                },
+                success: function (data, textStatus, jqXHR) {
+                    var result = data.data;
+                    myChart.setOption({
+                        series: [
+                            {
+                                name: '用户平均抢红包数',
+                                type: 'line',
+                                smooth: 0.3,
+                                data: result.red_average_num_list
+                            },
+                            {
+                                name: '当天提现总额',
+                                type: 'line',
+                                smooth: 0.3,
+                                data: result.withdraw_num_list
+                            }, {
+                                name: '当天抢红包数量',
+                                type: 'line',
+                                smooth: 0.3,
+                                data: result.red_record_num_list
+                            }, {
+                                name: '当天用户领取的总红包',
+                                type: 'line',
+                                smooth: 0.3,
+                                data: result.red_num_list
+                            },
+                            {
+                                name: '用户的总余额',
+                                type: 'line',
+                                smooth: 0.3,
+                                data: result.user_balance_num_list
+                            }
+                        ]
+                    });
+                    myChart.setOption({
+                        xAxis: [
+                            {
+                                type: 'category',
+                                boundaryGap: false,
+                                data: result.date_list
+                            },
+                        ]
+                    });
+                },
+                error: function (xhr, textStatus) {
+                    layer.alert('数据加载错误');
+                },
+                complete: function () {
+                    layer.close(load_index);
+                }
+            });
+        }
+
+        $(function () {
+            getChartData();
+        });
+    });
+</script>
+</body>
+</html>

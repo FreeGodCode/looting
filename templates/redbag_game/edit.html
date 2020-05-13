@@ -1,0 +1,227 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}编辑玩包玩法{% endblock %}
+{% block style %}
+<style type="text/css">
+    .layui-form-label {
+        width: 120px;
+    }
+
+    .layui-input-block {
+        margin-left: 150px;
+    }
+
+    body {
+        background: white;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div style="padding: 15px;">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>编辑玩包玩法</legend>
+    </fieldset>
+    <form class="layui-form" id="form_box" method="post">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">玩法名字</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" id="name" lay-verify="name" autocomplete="off" placeholder="请输入红包玩法名字"
+                       class="layui-input" required>
+                <input type="hidden" id="_id" name="_id">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">小LOGO图</label>
+            <div class="layui-input-block">
+                <p>
+                <div style="width: 90px;height: 90px;line-height: 90px;text-align: center;"><img id="img_url_img" src=""
+                                                                                                 width="90"></div>
+                </p>
+                <p>
+                    <a href="javascript:void(0);" class="layui-btn ">浏览文件</a>
+                    <span class="see_file"></span>
+                    <input type="file" multiple name="img_url" id="img_url" class="input-file "
+                           style="width:92px;height: 38px;left: 0px;position: absolute; opacity: 0;">
+                </p>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">玩法类型</label>
+            <div class="layui-input-block">
+                <select name="type_num" id="type_num">
+                    <option value="0" selected>老玩法</option>
+                    <option value="1">新玩法</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">玩法描述</label>
+            <div class="layui-input-block">
+                <input type="text" name="des" id="des" lay-verify="des" autocomplete="off"
+                       placeholder="请输入红包玩法介绍" class="layui-input" required>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">按钮文字</label>
+            <div class="layui-input-block">
+                <input type="text" name="button_txt" id="button_txt" lay-verify="button_txt" autocomplete="off"
+                       placeholder="请输入红包玩法按钮文字" class="layui-input" required>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序值</label>
+            <div class="layui-input-block">
+                <input type="number" name="sort_id" id="sort_id" lay-verify="sort_id" autocomplete="off"
+                       placeholder="请输入帮助文档排序值" class="layui-input" required>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户端模板ID</label>
+            <div class="layui-input-block">
+                <input type="text" name="template_id" id="template_id" lay-verify="template_id" autocomplete="off"
+                       placeholder="请输入红包玩法客户端模板ID" class="layui-input" required>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否上线</label>
+            <div class="layui-input-block">
+                <select name="is_online" id="is_online">
+                    <option value="0" selected>未上线</option>
+                    <option value="1">已上线</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示状态</label>
+            <div class="layui-input-block">
+                <select name="status" id="status">
+                    <option value="1" selected>显示</option>
+                    <option value="-1">隐藏</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="remark" id="remark" lay-verify="remark"
+                       placeholder="请输入此红包玩法的备注" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-layout-admin">
+            <div class="layui-input-block">
+                <div class="layui-footer" style="left: 0;">
+                    <button class="layui-btn" lay-submit="" id="demo1" lay-filter="component-form-demo1">立即提交</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+
+<script>
+
+    var $, form;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', "laydate", 'layedit'], function () {
+        $ = layui.$;
+        form = layui.form;
+        //执行一个laydate实例
+        layui.laydate.render({
+            elem: '.showdate',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+
+        form = layui.form;
+        $form = $('form');
+
+
+        $(".input-file").on("change", function () {
+            var _html = $(this).val();
+            $(this).prev("span.see_file").html(_html)
+        });
+
+
+        $.ajax({
+            type: 'get',
+            url: '/api/redbag_game/detail?_id={{ _id }}',
+            dataType: 'json',
+            beforeSend: function (xhr, settings) {
+                showLoading();
+            },
+            success: function (data) {
+                if (data.code != 200) {
+                    var login_callback = undefined;
+                    if (data.code == 230) {
+                        login_callback = login_address_jump;
+                    }
+                    //如果是未登录则进行跳转
+                    showErrorTips(data.msg, '错误提示', login_callback);
+                    return;
+                } else {
+                    var item = data.data;
+                    $("#_id").val(item._id);
+                    $("#name").val(item.name);
+                    $("#sort_id").val(item.sort_id);
+                    $("#type_num").val(item.type_num);
+                    $("#des").val(item.des);
+                    $("#button_txt").val(item.button_txt);
+                    $("#is_online").val(item.is_online);
+                    $("#status").val(item.status);
+                    $("#template_id").val(item.template_id);
+                    $("#remark").val(item.remark);
+                    document.getElementById("img_url_img").src = item.img_url;
+                }
+                form.render();
+            },
+            error: function (xhr, type) {
+                showErrorTips(type + '：' + xhr.statusText, xhr.status + ' 错误');
+            },
+            complete: function (xhr, status) {
+                hideLoading();
+            }
+        });
+        $('#form_box').ajaxForm({
+            url: "/api/redbag_game/update",
+            beforeSubmit: checkForm,  // pre-submit callback
+            beforeSend: beforesend,
+            success: complete,  // post-submit callback
+            error: error_fun,
+            dataType: 'json'
+        });
+        function beforesend() {
+            showLoading();
+        }
+
+        function checkForm() {
+            return true;
+        }
+
+        function complete(data) {
+            if (data.code == 200) {
+                showSuccessTips('更新成功！', '提示', function () {
+                    layer.closeAll("loading");
+                    parent.tab.changeTabsPage("redbag_game/list", "玩包玩法");
+                });
+                return;
+            } else {
+                showErrorTips(data.msg, '提示', function () {
+                    layer.closeAll("loading");
+                });
+            }
+        }
+
+        function error_fun() {
+            showErrorTips('操作失败', '提示', function () {
+                layer.closeAll("loading");
+            });
+        }
+    });
+</script>
+{% endblock %}

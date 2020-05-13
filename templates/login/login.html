@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>登入 - 夺宝APP</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="{{ url_for('login.static', filename='plugins/layuiadmin/dist/layuiadmin/layui/css/layui.css') }}" media="all">
+  <link rel="stylesheet" href="{{ url_for('login.static', filename='plugins/layuiadmin/dist/layuiadmin/style/admin.css') }}" media="all">
+  <link rel="stylesheet" href="{{ url_for('login.static', filename='plugins/layuiadmin/dist/layuiadmin/style/login.css') }}" media="all">
+</head>
+<body>
+
+  <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+
+    <div class="layadmin-user-login-main">
+      <div class="layadmin-user-login-box layadmin-user-login-header">
+        <h2>夺宝APP</h2>
+        <p>后台管理系统</p>
+      </div>
+      <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+        <div class="layui-form-item">
+          <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
+          <input type="text" name="username" id="loginname" lay-verify="required" placeholder="用户名" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+          <input type="password" name="password" id="loginpwd" lay-verify="required" placeholder="密码" class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-row">
+            <div class="layui-col-xs7">
+              <label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+              <input type="text" name="vercode" id="vercode" lay-verify="required" maxlength="4" autocomplete="off"  placeholder="图形验证码" class="layui-input">
+            </div>
+            <div class="layui-col-xs5">
+              <div style="margin-left: 10px;">
+                <img src="/yqfadmin/captcha?r=232552" class="layadmin-user-login-codeimg" id="img-vercode">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <button class="layui-btn layui-btn-fluid" id="submit_btn" lay-submit lay-filter="LAY-user-login-submit">登 入</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="{{ url_for('login.static', filename='plugins/layuiadmin/dist/layuiadmin/layui/layui.js') }}"></script>
+  <script src="{{ url_for('login.static', filename='js/show_fun.js') }}" type="text/javascript" charset="utf-8"></script>
+  <script>
+  layui.config({
+    base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index','jquery', 'user'], function(){
+    var $ = layui.$
+    ,form = layui.form;
+
+   form.render();
+    /**
+     * 刷新验证码
+     */
+    function refresh_code() {
+        $('#img-vercode').attr('src', '/yqfadmin/captcha?r=' + Math.random() * 5);
+    }
+
+     /**
+     * 提交表单
+     */
+    function submit_form() {
+        var loginname = $('#loginname').val();
+        var loginpwd = $('#loginpwd').val();
+        var vercode = $('#vercode').val();
+
+        if (!loginname || loginname.length < 1) {
+            showTips('请填写登录账号', 0, '提示', '');
+            return;
+        }
+        if (!vercode || vercode.length < 1) {
+            showTips('请填写验证码', 0, '提示', '');
+            return;
+        } else if (vercode.length != 4) {
+            showTips('验证码输入不正确', 0, '提示', '');
+            refresh_code();
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            url: '/yqfadmin/login',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            data: JSON.stringify({
+                'loginname': loginname,
+                'password': loginpwd,
+                'login_code': vercode,
+            }),
+            beforeSend: function (xhr, settings) {
+                showLoading();
+            },
+            success: function (data) {
+                if (data.code != 200) {
+                    refresh_code();
+                    showErrorTips(data.msg, '错误提示');
+                } else {
+                    showMessage('登录成功！正在跳转...');
+                    setTimeout(function () {
+                        window.location.href = '/yqfadmin';
+                    }, 1000);
+                }
+            },
+            error: function (xhr, type) {
+                refresh_code();
+                showErrorTips(type + '：' + xhr.statusText, 0, xhr.status + ' 错误', '');
+            },
+            complete: function (xhr, status) {
+                hideLoading();
+            },
+
+        });
+        }
+        $('#img-vercode').on('click', function () {
+            refresh_code();
+        });
+
+        //按下回车键提交表单
+        $(window).keydown(function (e) {
+            var e = e || event,
+                    keycode = e.which || e.keyCode;
+            if (keycode == 13) {
+                submit_form();
+            }
+        });
+        $('#submit_btn').on('click', function () {
+            submit_form();
+        });
+  });
+  </script>
+</body>
+</html>

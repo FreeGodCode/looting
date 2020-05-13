@@ -1,0 +1,302 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}系统配置{% endblock %}
+{% block style %}
+<style type="text/css">
+    .layui-form-label {
+        width: 170px;
+    }
+
+    .layui-input-block {
+        margin-left: 200px;
+    }
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">系统设置</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" method="post" id="form_box">
+                <div class="layui-form-item">
+
+                    <label class="layui-form-label">短信验证码</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="input_phonecode" id="input_phonecode" value=""
+                               placeholder="手机验证码" class="layui-input" width="200px"
+                               oninput="if(this.value.toString().length > 6)this.value = this.value.toString().slice(0,6)"/>
+                    </div>
+                    <div class="layui-input-inline" style="top: 8px;">
+                        <span onclick="getPhoneCode(this)" style="cursor:pointer;">获取验证码</span>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">默认星球名字</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="planet_name" id="planet_name" lay-verify="planet_name"
+                               autocomplete="off"
+                               placeholder="请输入默认星球名字" class="layui-input">
+                        <input type="hidden" id="_id" name="_id">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">默认星球头像</label>
+                    <div class="layui-input-block">
+                        <p>
+                        <div style="width: 90px;height: 90px;line-height: 90px;text-align: center;"><img
+                                id="img_url_img" src=""
+                                width="90"></div>
+                        </p>
+                        <p>
+                            <a href="javascript:void(0);" class="layui-btn ">浏览文件</a>
+                            <span class="see_file"></span>
+                            <input type="file" multiple name="img_url" id="img_url" class="input-file "
+                                   style="width:92px;height: 38px;left: 0px;position: absolute; opacity: 0;">
+                        </p>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">球主头像</label>
+                    <div class="layui-input-block">
+                        <p>
+                        <div style="width: 90px;height: 90px;line-height: 90px;text-align: center;"><img
+                                id="ball_avatar_img" src=""
+                                width="90"></div>
+                        </p>
+                        <p>
+                            <a href="javascript:void(0);" class="layui-btn ">浏览文件</a>
+                            <span class="see_file1"></span>
+                            <input type="file" multiple name="ball_avatar" id="ball_avatar" class="input-file1 "
+                                   style="width:92px;height: 38px;left: 0px;position: absolute; opacity: 0;">
+                        </p>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">七牛空间URL</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="qn_url" id="qn_url" lay-verify="qn_url" autocomplete="off"
+                               placeholder="请输入七牛空间URL" class="layui-input">
+
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">七牛空间名字</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bucket_name" id="bucket_name" lay-verify="bucket_name"
+                               autocomplete="off" placeholder="请输入七牛空间名字" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">七牛空间apiKey</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="access_key" id="access_key" lay-verify="access_key"
+                               autocomplete="off" placeholder="请输入七牛空间apiKey" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">七牛空间apiSecret</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="secret_key" id="secret_key" lay-verify="secret_key"
+                               autocomplete="off" placeholder="请输入七牛空间apiSecret" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">公众号二维码</label>
+                    <div class="layui-input-block">
+                        <p>
+                        <div style="width: 90px;height: 90px;line-height: 90px;text-align: center;"><img
+                                id="gzh_qrcode_img" src=""
+                                width="90"></div>
+                        </p>
+                        <p>
+                            <a href="javascript:void(0);" class="layui-btn ">浏览文件</a>
+                            <span class="see_file1"></span>
+                            <input type="file" multiple name="gzh_qrcode" id="gzh_qrcode" class="input-file1 "
+                                   style="width:92px;height: 38px;left: 0px;position: absolute; opacity: 0;">
+                        </p>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">公众号名字</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="gzh_name" id="gzh_name" lay-verify="gzh_name"
+                               autocomplete="off" placeholder="请输入公众号名字" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">公众号令牌(Token)</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="gzh_token" id="gzh_token" lay-verify="gzh_token"
+                               autocomplete="off" placeholder="请输入公众号令牌(Token)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">公众号开发者ID(AppID)</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="gzh_appid" id="gzh_appid" lay-verify="gzh_appid"
+                               autocomplete="off" placeholder="请输入公众号开发者ID(AppID)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">公众号秘钥(AppSecret)</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="gzh_appsecret" id="gzh_appsecret" lay-verify="gzh_appsecret"
+                               autocomplete="off" placeholder="请输入公众号秘钥(AppSecret)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">安卓最新正式版本下载地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="android_dowload_url" id="android_dowload_url"
+                               lay-verify="android_dowload_url"
+                               autocomplete="off" placeholder="请输入安卓最新版本下载地址" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">苹果最新正式版本下载地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ios_dowload_url" id="ios_dowload_url" lay-verify="ios_dowload_url"
+                               autocomplete="off" placeholder="请输入苹果最新版本下载地址" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">热量页面醒目文章ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="heat_art_id" id="heat_art_id" lay-verify="heat_art_id"
+                               autocomplete="off" placeholder="请输入热量页面醒目文章跳转ID" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">收益页面醒目文章ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="income_art_id" id="income_art_id" lay-verify="income_art_id"
+                               autocomplete="off" placeholder="请输入收益页面醒目文章ID" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">提现页面醒目文章ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="withdraw_art_id" id="withdraw_art_id" lay-verify="withdraw_art_id"
+                               autocomplete="off" placeholder="请输入提现页面醒目文章ID" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" class="layui-btn"
+                                    lay-filter="component-form-demo1">保存修改
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    var layer;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'laydate'], function () {
+        layer = layui.layer,
+                form = layui.form;
+        layui.laydate.render({
+            elem: '#candy_new_time',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        layui.laydate.render({
+            elem: '#task_new_time',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        $(".input-file").on("change", function () {
+            var _html = $(this).val();
+            $(this).prev("span.see_file").html(_html)
+        });
+        $(".input-file1").on("change", function () {
+            var _html = $(this).val();
+            $(this).prev("span.see_file1").html(_html)
+        });
+
+        $.ajax({
+            type: 'get',
+            url: '/api/system/detail',
+            dataType: 'json',
+            beforeSend: function (xhr, settings) {
+                showLoading();
+            },
+            success: function (data) {
+                if (data.code != 200) {
+                    var login_callback = undefined;
+                    if (data.code == 230) {
+                        login_callback = login_address_jump;
+                    }
+                    //如果是未登录则进行跳转
+                    showErrorTips(data.msg, '错误提示', login_callback);
+                    return;
+                } else {
+                    var item = data.data;
+                    $("#_id").val(item._id);
+                    $("#gzh_name").val(item.gzh_name);
+                    $("#gzh_appsecret").val(item.gzh_appsecret);
+                    $("#gzh_token").val(item.gzh_token);
+                    $("#gzh_appid").val(item.gzh_appid);
+                    $("#bucket_name").val(item.bucket_name);
+                    $("#access_key").val(item.access_key);
+                    $("#secret_key").val(item.secret_key);
+                    $("#qn_url").val(item.qn_url);
+                    $("#planet_name").val(item.planet_name);
+                    $("#android_dowload_url").val(item.android_dowload_url);
+                    $("#ios_dowload_url").val(item.ios_dowload_url);
+                    $("#heat_art_id").val(item.heat_art_id);
+                    $("#income_art_id").val(item.income_art_id);
+                    $("#withdraw_art_id").val(item.withdraw_art_id);
+                    document.getElementById("img_url_img").src = item.img_url;
+                    document.getElementById("ball_avatar_img").src = item.ball_avatar;
+                    document.getElementById("gzh_qrcode_img").src = item.gzh_qrcode;
+                }
+            },
+            error: function (xhr, type) {
+                showErrorTips(type + '：' + xhr.statusText, xhr.status + ' 错误');
+            },
+            complete: function (xhr, status) {
+                hideLoading();
+            }
+        });
+
+        $('#form_box').ajaxForm({
+            url: "/api/system/update",
+            beforeSubmit: checkForm,  // pre-submit callback
+            success: complete,  // post-submit callback
+            error: error_fun,
+            dataType: 'json'
+        });
+        function checkForm() {
+            return true;
+        }
+
+        function complete(data) {
+            if (data.code == 200) {
+                showSuccessTips('更新成功！', '提示', function () {
+                    location.reload(true)
+                });
+                return;
+            } else {
+                showErrorTips(data.msg, '提示');
+            }
+        }
+
+        function error_fun(data) {
+            showErrorTips('操作失败', '提示');
+        }
+    });
+
+</script>
+{% endblock %}

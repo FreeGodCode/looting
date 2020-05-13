@@ -1,0 +1,689 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}运营设置{% endblock %}
+{% block style %}
+<style type="text/css">
+    .layui-form-label {
+        width: 400px;
+    }
+
+    .layui-input-block {
+        margin-left: 430px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">运营设置</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" method="post" id="form_box">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">短信验证码</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="input_phonecode" id="input_phonecode" value=""
+                               placeholder="手机验证码" class="layui-input" width="200px"
+                               oninput="if(this.value.toString().length > 6)this.value = this.value.toString().slice(0,6)"/>
+                    </div>
+                    <div class="layui-input-inline" style="top: 8px;">
+                        <span onclick="getPhoneCode(this)" style="cursor:pointer;">获取验证码</span>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">完成新手任务第一步奖励现金(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="task1_cash" id="task1_cash"
+                               lay-verify="task1_cash"
+                               autocomplete="off" placeholder="请输入完成新手任务第一步奖励的现金值(单位分)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">完成新手任务第二步奖励现金(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="task2_cash" id="task2_cash"
+                               lay-verify="task2_cash"
+                               autocomplete="off" placeholder="请输入完成新手任务第二步奖励的现金值(单位分)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">绑定手机奖励现金(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="bind_phone_cash" id="bind_phone_cash"
+                               lay-verify="bind_phone_cash"
+                               autocomplete="off" placeholder="请输入绑定手机奖励的现金值(单位分)" class=" layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">绑定邀请码奖励现金(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="bind_invite_cash" id="bind_invite_cash"
+                               lay-verify="bind_invite_cash"
+                               autocomplete="off" placeholder="请输入绑定邀请码奖励现金(单位分)" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">有效邀请多少人成为球主</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="effective_invitation_num" id="effective_invitation_num"
+                               lay-verify="effective_invitation_num"
+                               autocomplete="off" placeholder="请输入有效邀请多少人成为球主" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">一天有效邀请奖励现金与热量的最高人数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="calorific_number_people" id="calorific_number_people"
+                               lay-verify="calorific_number_people"
+                               autocomplete="off" placeholder="请输入一天有效邀请奖励热量的最高人数" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">有效邀请完成提现奖励热量值</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="effective_invitation_calorific" id="effective_invitation_calorific"
+                               lay-verify="effective_invitation_calorific"
+                               autocomplete="off" placeholder="请输入有效邀请完成提现奖励的热量值" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">有效邀请直接奖励现金值(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="effective_invitation_cash1" id="effective_invitation_cash1"
+                               lay-verify="effective_invitation_cash1"
+                               autocomplete="off" placeholder="请输入有效邀请直接奖励现金值(单位分)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">有效邀请完成提现奖励现金值(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="effective_invitation_cash2" id="effective_invitation_cash2"
+                               lay-verify="effective_invitation_cash2"
+                               autocomplete="off" placeholder="请输入有效邀请完成提现奖励现金值(单位分)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">球主享原住居民红包收益百分比</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="commission_percent_1" id="commission_percent_1"
+                               lay-verify="commission_percent_1"
+                               autocomplete="off" placeholder="请输入球主享原住居民红包收益百分比" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">球主享附属居民红包收益百分比</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="commission_percent_2" id="commission_percent_2"
+                               lay-verify="commission_percent_2"
+                               autocomplete="off" placeholder="请输入球主享附属居民红包收益百分比" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">多少分钟内未抢红包只能补抢</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="red_failure_time" id="red_failure_time"
+                               lay-verify="red_failure_time"
+                               autocomplete="off" placeholder="请输入多少分钟内未抢红包只能补抢" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">一天补抢最高次数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="makeup_red_times" id="makeup_red_times"
+                               lay-verify="makeup_red_times"
+                               autocomplete="off" placeholder="请输入一天补抢最高次数" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">补抢红包最高金额(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="makeup_red_cash" id="makeup_red_cash"
+                               lay-verify="makeup_red_cash"
+                               autocomplete="off" placeholder="请输入补抢红包最高金额(单位分)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">补抢红包最低金额(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="makeup_red_cash_lowest" id="makeup_red_cash_lowest"
+                               lay-verify="makeup_red_cash_lowest"
+                               autocomplete="off" placeholder="补抢红包最低金额(单位分)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户新进前几天按下方设置补抢方式</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="makeup_red_day" id="makeup_red_day"
+                               lay-verify="makeup_red_day"
+                               autocomplete="off" placeholder="用户新进前几天按下方设置补抢方式" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">补抢方式</label>
+                    <div class="layui-input-block">
+                        <select name="makeup_red_condition" id="makeup_red_condition" lay-filter="makeup_red_condition">
+                            <option value="0">分享补抢</option>
+                            <option value="1">看视频补抢</option>
+                            <option value="2">分享视频随机补抢</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">热量值低于多少无法抢红包</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="red_lowest_calorific" id="red_lowest_calorific"
+                               lay-verify="red_lowest_calorific"
+                               autocomplete="off" placeholder="请输入热量值低于多少无法抢红包" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">正常抢红包后所返热量值</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="red_returnp_calorific" id="red_returnp_calorific"
+                               lay-verify="red_returnp_calorific"
+                               autocomplete="off" placeholder="请输入正常抢红包后所返热量值" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">一天抢红包返热量翻倍最高次数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="returnp_calorific_double_times" id="returnp_calorific_double_times"
+                               lay-verify="returnp_calorific_double_times"
+                               autocomplete="off" placeholder="请输入一天正常抢红包返热量值翻倍最高次数" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">正常抢红包值小于等于多少红包翻倍(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="red_double_cash" id="red_double_cash"
+                               lay-verify="red_double_cash"
+                               autocomplete="off" placeholder="正常抢红包值小于等于多少红包翻倍(单位分)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户新进前几天按下方设置翻倍方式</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="red_double_day" id="red_double_day"
+                               lay-verify="red_double_day"
+                               autocomplete="off" placeholder="用户新进前几天按下方设置翻倍方式" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">翻倍方式</label>
+                    <div class="layui-input-block">
+                        <select name="red_double_condition" id="red_double_condition" lay-filter="red_double_condition">
+                            <option value="0">分享翻倍</option>
+                            <option value="1">看视频翻倍</option>
+                            <option value="2">分享视频随机翻倍</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">多少热量价值一分钱</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="penny_calorific" id="penny_calorific"
+                               lay-verify="penny_calorific" autocomplete="off"
+                               placeholder="请输入多少热量价值一分钱" class="layui-input">
+                        <input type="hidden" id="_id" name="_id">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">可用热量低于多少不参与分红</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="dividend_of_calorific" id="dividend_of_calorific"
+                               lay-verify="dividend_of_calorific"
+                               autocomplete="off" placeholder="请输入可用热量低于多少不参与分红" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">参与分红时扣除当前可用热量的百分比</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="dividend_deduct_calorific_per" id="dividend_deduct_calorific_per"
+                               lay-verify="dividend_deduct_calorific_per"
+                               autocomplete="off" placeholder="请输入参与分红时扣除当前可用热量的百分比" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">微转文章扣量百分比</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="wechat_transfer_per_deduction" id="wechat_transfer_per_deduction"
+                               lay-verify="wechat_transfer_per_deduction"
+                               autocomplete="off" placeholder="请输入微转文章扣量百分比" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">微转一个有效阅读奖励的现金值(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="wechat_transfer_cash" id="wechat_transfer_cash"
+                               lay-verify="wechat_transfer_cash"
+                               autocomplete="off" placeholder="请输入微转一个有效阅读奖励的现金值" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">微转一个有效阅读奖励的热量值</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="wechat_transfer_calorific" id="wechat_transfer_calorific"
+                               lay-verify="wechat_transfer_calorific"
+                               autocomplete="off" placeholder="请输入微转一个有效阅读奖励的热量值" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">微信转发在热量首页显示的数据条数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="wechat_trsf_display_quantity" id="wechat_trsf_display_quantity"
+                               lay-verify="wechat_trsf_display_quantity"
+                               autocomplete="off" placeholder="请输入微信转发在热量首页显示的数据条数" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">微转活动标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="transfer_activity_title" id="transfer_activity_title"
+                               lay-verify="transfer_activity_title"
+                               autocomplete="off" placeholder="请输入微转活动标题(当没有活动是此字段为空)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">微转活动时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="transfer_activity_time" id="transfer_activity_time"
+                               lay-verify="transfer_activity_time"
+                               autocomplete="off" placeholder="请输入微转活动时间（11月10日0点 - 11月10日24点）" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">多少步数兑换一热量</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="step_count_calorific" id="step_count_calorific"
+                               lay-verify="step_count_calorific"
+                               autocomplete="off" placeholder="请输入多少步数兑换一热量" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">一天最多兑换步数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="step_count_day" id="step_count_day"
+                               lay-verify="step_count_day"
+                               autocomplete="off" placeholder="请输入一天最多兑换步数" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">观看视频奖励的热量值</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="watch_video_calorific" id="watch_video_calorific"
+                               lay-verify="watch_video_calorific"
+                               autocomplete="off" placeholder="请输入观看视频奖励的热量值" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">一天观看视频最多奖励热量次数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="watch_video_times" id="watch_video_times"
+                               lay-verify="watch_video_times"
+                               autocomplete="off" placeholder="请输入一天观看视频最多奖励热量次数" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">浏览一次广告获得的热量</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="read_ad_calorific" id="read_ad_calorific"
+                               lay-verify="read_ad_calorific"
+                               autocomplete="off" placeholder="请输入浏览一次广告获得的热量" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">完成新手任务奖励热量</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="novice_task_calorific" id="novice_task_calorific"
+                               lay-verify="novice_task_calorific"
+                               autocomplete="off" placeholder="请输入完成新手任务奖励热量" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">实名认证奖励热量</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="name_verified_calorific" id="name_verified_calorific"
+                               lay-verify="name_verified_calorific"
+                               autocomplete="off" placeholder="请输入实名认证奖励热量" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">绑定支付宝奖励热量</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="bind_alipay_calorific" id="bind_alipay_calorific"
+                               lay-verify="bind_alipay_calorific"
+                               autocomplete="off" placeholder="请输入绑定支付宝奖励热量" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">绑定微信奖励热量</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="bind_wechat_calorific" id="bind_wechat_calorific"
+                               lay-verify="bind_wechat_calorific"
+                               autocomplete="off" placeholder="请输入绑定微信奖励热量" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分享一次获得的热量</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="share_reward_calorific" id="share_reward_calorific"
+                               lay-verify="share_reward_calorific"
+                               autocomplete="off" placeholder="请输入分享一次获得的热量" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">整点红包失效时长(单位分钟)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="integer_red_failure_time" id="integer_red_failure_time"
+                               lay-verify="integer_red_failure_time"
+                               autocomplete="off" placeholder="请输入整点红包失效时长(单位分钟)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">参与一次整点红包消耗的热量值</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="integer_red_consume_calorific" id="integer_red_consume_calorific"
+                               lay-verify="integer_red_consume_calorific"
+                               autocomplete="off" placeholder="请输入参与一次整点红包消耗的热量值" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">整点红包被抢完了通过看视频获取热量的最高次数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="integer_red_calorific_num" id="integer_red_calorific_num"
+                               lay-verify="integer_red_calorific_num"
+                               autocomplete="off" placeholder="请输入当整点红包被抢完了用户通过看视频获取热量的最高次数" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">整点红包被抢完了通过看视频获取到的热量值</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="integer_red_calorific" id="integer_red_calorific"
+                               lay-verify="integer_red_calorific"
+                               autocomplete="off" placeholder="请输入当整点红包被抢完了用户通过看视频获取到的热量值" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">整点红包参与但未抢到通过看视频反返热量的最高次数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="integer_red_calorific_return_num"
+                               id="integer_red_calorific_return_num"
+                               lay-verify="integer_red_calorific_return_num"
+                               autocomplete="off" placeholder="请输入用户参与整点红包后未抢到通过看视频反返热量的最高次数" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">整点红包参与但未抢到通过看视频反返的热量值</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="integer_red_return_calorific" id="integer_red_return_calorific"
+                               lay-verify="integer_red_return_calorific"
+                               autocomplete="off" placeholder="请输入用户参与整点红包但未抢到通过看视频可反返的热量值" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">整点红包占总资金百分之 1 时发的红包个数</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="integer_red_number" id="integer_red_number"
+                               lay-verify="integer_red_number"
+                               autocomplete="off" placeholder="请输入一个整点红包分配的资金为总的整点红包总资金百分之一时所发送的红包个数"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">第一次参与猜红包消耗的热量值</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="guess_red_consume_calorific" id="guess_red_consume_calorific"
+                               lay-verify="guess_red_consume_calorific"
+                               autocomplete="off" placeholder="请输入用户第一次参与猜红包消耗的热量值" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">猜红包消耗翻倍递增的最大热量值为</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="guess_red_consume_calorific_maximum"
+                               id="guess_red_consume_calorific_maximum"
+                               lay-verify="guess_red_consume_calorific_maximum"
+                               autocomplete="off" placeholder="请输入用户猜红包消耗翻倍递增的最大热量值为" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">猜红包参与几次之后才能通过看视频显示最后一个数字的提示</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="guess_red_num_prompt" id="guess_red_num_prompt"
+                               lay-verify="guess_red_num_prompt"
+                               autocomplete="off" placeholder="请输入用户参与猜红包几次之后才能通过看视频显示最后一个数字的提示" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">每期猜红包失效时长(分钟)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="guess_red_invalid_time" id="guess_red_invalid_time"
+                               lay-verify="guess_red_invalid_time"
+                               autocomplete="off" placeholder="请输入每期猜红包失效时长(分钟)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">红包时间点分配比例json数据</label>
+                    <div class="layui-input-block">
+                    <textarea placeholder="请输入提现json数据" name="red_hour_per_json" id="red_hour_per_json"
+                              class="layui-textarea"
+                              style="width: 100%;height: 100px;">{}</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">提现金额少于等多少自动提现(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="automatic_withdraw_cash" id="automatic_withdraw_cash"
+                               lay-verify="automatic_withdraw_cash"
+                               autocomplete="off" placeholder="请输入当提现金额少于等多少自动提现(单位分)" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">新人提现体验金(单位分)</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="new_withdraw_cash" id="new_withdraw_cash"
+                               lay-verify="new_withdraw_cash"
+                               autocomplete="off" placeholder="请输入新人提现体验金" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">提现json数据(单位元)</label>
+                    <div class="layui-input-block">
+                    <textarea placeholder="请输入提现json数据" name="withdraw_cash_json" id="withdraw_cash_json"
+                              class="layui-textarea"
+                              style="width: 100%;height: 100px;">[]</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">新的提现json数据(单位元)</label>
+                    <div class="layui-input-block">
+                    <textarea placeholder="请输入新的提现json数据" name="withdraw_cash_json_new" id="withdraw_cash_json_new"
+                              class="layui-textarea"
+                              style="width: 100%;height: 100px;">[]</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">每签到json数据</label>
+                    <div class="layui-input-block">
+                    <textarea placeholder="请输入每签到json数据" name="check_in_calorific_json" id="check_in_calorific_json"
+                              class="layui-textarea"
+                              style="width: 100%;height: 100px;">[]</textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">累计热量解锁红包json数据(单位元)</label>
+                    <div class="layui-input-block">
+                    <textarea placeholder="请输入累计热量解锁红包json数据(单位元)" name="calorific_cash_json" id="calorific_cash_json"
+                              class="layui-textarea"
+                              style="width: 100%;height: 200px;">[]</textarea>
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item layui-layout-admin">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" class="layui-btn"
+                                    lay-filter="component-form-demo1">保存修改
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', 'laydate'], function () {
+        layer = layui.layer,
+                form = layui.form;
+        layui.laydate.render({
+            elem: '#candy_new_time',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        layui.laydate.render({
+            elem: '#task_new_time',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+        $(".input-file").on("change", function () {
+            var _html = $(this).val();
+            $(this).prev("span.see_file").html(_html)
+        });
+
+        $.ajax({
+            type: 'get',
+            url: '/api/operation/detail',
+            dataType: 'json',
+            beforeSend: function (xhr, settings) {
+                showLoading();
+            },
+            success: function (data) {
+                if (data.code != 200) {
+                    var login_callback = undefined;
+                    if (data.code == 230) {
+                        login_callback = login_address_jump;
+                    }
+                    //如果是未登录则进行跳转
+                    showErrorTips(data.msg, '错误提示', login_callback);
+                    return;
+                } else {
+                    var item = data.data;
+                    $("#_id").val(item._id);
+                    $("#task1_cash").val(item.task1_cash);
+                    $("#task2_cash").val(item.task2_cash);
+                    $("#bind_phone_cash").val(item.bind_phone_cash);
+                    $("#bind_invite_cash").val(item.bind_invite_cash);
+                    $("#penny_calorific").val(item.penny_calorific);
+                    $("#effective_invitation_num").val(item.effective_invitation_num);
+                    $("#calorific_number_people").val(item.calorific_number_people);
+                    $("#effective_invitation_calorific").val(item.effective_invitation_calorific);
+                    $("#effective_invitation_cash1").val(item.effective_invitation_cash1);
+                    $("#effective_invitation_cash2").val(item.effective_invitation_cash2);
+                    $("#dividend_of_calorific").val(item.dividend_of_calorific);
+                    $("#dividend_deduct_calorific_per").val(item.dividend_deduct_calorific_per);
+
+                    $("#transfer_activity_title").val(item.transfer_activity_title);
+                    $("#transfer_activity_time").val(item.transfer_activity_time);
+                    $("#wechat_transfer_cash").val(item.wechat_transfer_cash);
+                    $("#wechat_transfer_calorific").val(item.wechat_transfer_calorific);
+                    $("#wechat_transfer_per_deduction").val(item.wechat_transfer_per_deduction);
+                    $("#wechat_trsf_display_quantity").val(item.wechat_trsf_display_quantity);
+
+                    $("#step_count_calorific").val(item.step_count_calorific);
+                    $("#step_count_day").val(item.step_count_day);
+                    $("#watch_video_calorific").val(item.watch_video_calorific);
+                    $("#watch_video_times").val(item.watch_video_times);
+                    $("#commission_percent_1").val(item.commission_percent_1);
+                    $("#commission_percent_2").val(item.commission_percent_2);
+                    $("#red_failure_time").val(item.red_failure_time);
+                    $("#makeup_red_times").val(item.makeup_red_times);
+                    $("#makeup_red_cash").val(item.makeup_red_cash);
+                    $("#makeup_red_cash_lowest").val(item.makeup_red_cash_lowest);
+                    $("#makeup_red_day").val(item.makeup_red_day);
+                    $("#makeup_red_condition").val(item.makeup_red_condition);
+                    $("#red_lowest_calorific").val(item.red_lowest_calorific);
+                    $("#red_returnp_calorific").val(item.red_returnp_calorific);
+                    $("#returnp_calorific_double_times").val(item.returnp_calorific_double_times);
+                    $("#red_double_cash").val(item.red_double_cash);
+                    $("#red_double_day").val(item.red_double_day);
+                    $("#red_double_condition").val(item.red_double_condition);
+                    $("#read_ad_calorific").val(item.read_ad_calorific);
+                    $("#novice_task_calorific").val(item.novice_task_calorific);
+                    $("#name_verified_calorific").val(item.name_verified_calorific);
+                    $("#bind_alipay_calorific").val(item.bind_alipay_calorific);
+                    $("#bind_wechat_calorific").val(item.bind_wechat_calorific);
+                    $("#share_reward_calorific").val(item.share_reward_calorific);
+
+                    $("#integer_red_failure_time").val(item.integer_red_failure_time);
+                    $("#integer_red_consume_calorific").val(item.integer_red_consume_calorific);
+                    $("#integer_red_calorific_num").val(item.integer_red_calorific_num);
+                    $("#integer_red_calorific").val(item.integer_red_calorific);
+                    $("#integer_red_calorific_return_num").val(item.integer_red_calorific_return_num);
+                    $("#integer_red_return_calorific").val(item.integer_red_return_calorific);
+                    $("#integer_red_number").val(item.integer_red_number);
+                    $("#guess_red_consume_calorific").val(item.guess_red_consume_calorific);
+                    $("#guess_red_consume_calorific_maximum").val(item.guess_red_consume_calorific_maximum);
+
+                    $("#guess_red_num_prompt").val(item.guess_red_num_prompt);
+                    $("#guess_red_invalid_time").val(item.guess_red_invalid_time);
+                    $("#red_hour_per_json").val(item.red_hour_per_json);
+
+                    $("#automatic_withdraw_cash").val(item.automatic_withdraw_cash);
+                    $("#new_withdraw_cash").val(item.new_withdraw_cash);
+                    $("#withdraw_cash_json").val(item.withdraw_cash_json);
+                    $("#withdraw_cash_json_new").val(item.withdraw_cash_json_new);
+                    $("#check_in_calorific_json").val(item.check_in_calorific_json);
+                    $("#calorific_cash_json").val(item.calorific_cash_json);
+                }
+                form.render();
+            },
+            error: function (xhr, type) {
+                showErrorTips(type + '：' + xhr.statusText, xhr.status + ' 错误');
+            },
+            complete: function (xhr, status) {
+                hideLoading();
+            }
+        });
+
+        $('#form_box').ajaxForm({
+            url: "/api/operation/update",
+            beforeSubmit: checkForm,  // pre-submit callback
+            success: complete,  // post-submit callback
+            error: error_fun,
+            dataType: 'json'
+        });
+        function checkForm() {
+            return true;
+        }
+
+        function complete(data) {
+            if (data.code == 200) {
+                showSuccessTips('更新成功！', '提示', function () {
+                    location.reload(true)
+                });
+                return;
+            } else {
+                showErrorTips(data.msg, '提示');
+            }
+        }
+
+        function error_fun(data) {
+            showErrorTips('操作失败', '提示');
+        }
+    });
+</script>
+{% endblock %}

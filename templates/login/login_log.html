@@ -1,0 +1,52 @@
+{% extends "layout/tableLayout.html" %}
+{% block title %}登录日志{% endblock %}
+
+{% block content %}
+     <div class="layui-card-body">
+        <table id="LAY-app-system-order" lay-filter="demo"></table>
+    </div>
+	{% endblock %}
+{% block script %}
+    <script>
+        var table, $, layer, element, form;
+        layui.config({
+            base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'layer', 'table', 'element'], function() {
+            $ = layui.$;
+            table = layui.table;
+            layer = layui.layer;
+            form = layui.form;
+            element = layui.element;
+            //渲染table
+            table.render({
+                elem: '#LAY-app-system-order',
+                url: '/yqfadmin/login/my_list',
+                cols: [[
+                      {type: 'numbers', fixed: 'left'}
+                      ,{field: 'ip', title: '登录IP地址', align: 'center'}
+                      ,{field: 'city', title: '所属区域', align: 'center'}
+                      ,{field: 'created_time', title: '登录时间', align: 'center'}
+                    ]],
+                response: { //定义后端 json 格式，详细参见官方文档
+                    statusName: 'code', //状态字段名称
+                    statusCode: '200', //状态字段成功值
+                    msgName: 'msg', //消息字段
+                    countName: 'count', //总数字段
+                    dataName: 'list' //数据字段
+                },
+                page: true,
+                limit: 20,
+                limits: [10, 15, 20, 25, 30],
+                text: {
+                    none: '暂无相关数据'
+                },
+                done: function() {
+                    element.render('progress')
+                }
+            });
+        });
+
+	</script>
+{% endblock %}

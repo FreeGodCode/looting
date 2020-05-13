@@ -1,0 +1,207 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}添加日常任务{% endblock %}
+{% block style %}
+<style type="text/css">
+    .layui-form-label {
+        width: 150px;
+    }
+
+    .layui-input-block {
+        margin-left: 180px;
+    }
+
+    body {
+        background: white;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div style="padding: 15px;">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>添加日常任务</legend>
+    </fieldset>
+    <form class="layui-form" id="form_box" method="post">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务名字</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" id="name" lay-verify="name" autocomplete="off" placeholder="请输入任务名字"
+                       class="layui-input" required>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务图标</label>
+            <div class="layui-input-block">
+                <p>
+                <div style="width: 90px;height: 90px;line-height: 90px;text-align: center;"><img id="img_url_img" src=""
+                                                                                                 width="90"></div>
+                </p>
+                <p>
+                    <a href="javascript:void(0);" class="layui-btn ">浏览文件</a>
+                    <span class="see_file"></span>
+                    <input type="file" multiple name="img_url" id="img_url" class="input-file "
+                           style="width:92px;height: 38px;left: 0px;position: absolute; opacity: 0;">
+                </p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序值</label>
+            <div class="layui-input-block">
+                <input type="number" name="sort_id" id="sort_id" lay-verify="sort_id" value="0" autocomplete="off"
+                       placeholder="请输入此app唤醒的排序值" class="layui-input" required>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">增加用户标识方法</label>
+            <div class="layui-input-block">
+                <input type="text" name="second_handle" id="second_handle" lay-verify="second_handle"
+                       placeholder="请输入此任务需要增加用户标识方法名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">跳转地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="jump_url" id="jump_url" lay-verify="jump_url"
+                       placeholder="请输入此点击此任务最终会跳转到的地址" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务开始时间</label>
+            <div class="layui-input-block">
+                <input type="time" name="start_time" id="start_time" lay-verify="start_time"
+                       placeholder="请输入此app唤醒任务有效的开始时间" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">任务结束时间</label>
+            <div class="layui-input-block">
+                <input type="time" name="end_time" id="end_time" lay-verify="end_time"
+                       placeholder="请输入此app唤醒任务有效的结束时间" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">完成一次奖励热量的值</label>
+            <div class="layui-input-block">
+                <input type="number" name="heat_value" id="heat_value" lay-verify="heat_value" value="5"
+                       autocomplete="off"
+                       placeholder="请输入完成一次此日常任务奖励的热量值" class="layui-input" required>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">每日奖励热量的次数</label>
+            <div class="layui-input-block">
+                <input type="number" name="heat_times" id="heat_times" lay-verify="heat_times" value="1"
+                       autocomplete="off"
+                       placeholder="请输入一天完成此日常任务奖励热量的最高次数" class="layui-input" required>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">延迟多少秒请求添加热量</label>
+            <div class="layui-input-block">
+                <input type="number" name="wait_time" id="wait_time" lay-verify="wait_time" value="3"
+                       autocomplete="off"
+                       placeholder="请输入用户进入后延迟多少秒请求添加热量" class="layui-input" required>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示状态</label>
+            <div class="layui-input-block">
+                <select name="status" id="status">
+                    <option value="1" selected>显示</option>
+                    <option value="-1">隐藏</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="remark" id="remark" lay-verify="remark"
+                       placeholder="请输入此app唤醒的备注" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-layout-admin">
+            <div class="layui-input-block">
+                <div class="layui-footer" style="left: 0;">
+                    <button class="layui-btn" lay-submit="" id="demo1" lay-filter="component-form-demo1">立即提交</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+
+<script>
+
+    var $, form;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', "laydate", 'layedit', 'element'], function () {
+        $ = layui.$;
+        form = layui.form;
+        //执行一个laydate实例
+        layui.laydate.render({
+            elem: '.start_time',
+            type: 'time'
+        });
+        layui.laydate.render({
+            elem: '.end_time',
+            type: 'time'
+        });
+
+        var element = layui.element;
+
+        form = layui.form;
+        $form = $('form');
+
+
+        $(".input-file").on("change", function () {
+            var _html = $(this).val();
+            $(this).prev("span.see_file").html(_html)
+        });
+        $('#form_box').ajaxForm({
+            url: "/api/daily_task/add",
+            beforeSubmit: checkForm,  // pre-submit callback
+            beforeSend: beforesend,
+            success: complete,  // post-submit callback
+            error: error_fun,
+            dataType: 'json'
+        });
+        function beforesend() {
+            showLoading();
+        }
+
+        function checkForm() {
+            return true;
+        }
+
+        function complete(data) {
+            if (data.code == 200) {
+                showSuccessTips('添加成功！', '提示', function () {
+                    layer.closeAll("loading");
+                    parent.tab.changeTabsPage("daily_task/list", "日常任务");
+                });
+                return;
+            } else {
+                showErrorTips(data.msg, '提示', function () {
+                    layer.closeAll("loading");
+                });
+            }
+        }
+
+        function error_fun() {
+            showErrorTips('操作失败', '提示', function () {
+                layer.closeAll("loading");
+            });
+        }
+    });
+</script>
+{% endblock %}

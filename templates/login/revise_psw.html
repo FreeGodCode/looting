@@ -1,0 +1,110 @@
+{% extends "layout/formLayout.html" %} {% block title %}修改密码{% endblock %} {% block style %}
+    <style type="text/css">
+      	.layui-input-inline{line-height: 36px;}
+		.layui-form-label{color:gray;width: 90px;}
+        body,html{background: white}
+    </style>
+{% endblock %} {% block content %}
+<div style="margin: 15px;">
+    <blockquote class="layui-elem-quote">
+        修改密码
+    </blockquote>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">旧密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="old_pass" lay-verify="old_pass" id="old_pass" autocomplete="off" placeholder="请输入旧密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="new_pass" lay-verify="new_pass" id="new_pass"  placeholder="请输入新密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认新密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="regPwd" lay-verify="regPwd" id="regPwd" placeholder="请输入确认密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-inline" style="padding-left: 120px;">
+                <button class="layui-btn"  id="submit_btn" >保存修改</button>
+            </div>
+        </div>
+    </div>
+{% endblock %} {% block script %}
+    <script>
+        var $, form,pwd;
+        layui.config({
+            base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form', 'laydate', 'layedit'], function() {
+            $ = layui.$;
+            form = layui.form;
+            //自定义验证规则
+            form.verify({
+                old_pass: [/(.+){6,12}$/, '密码必须6到12位'],
+                new_pass: [/(.+){6,12}$/, '新密码必须6到12位'],
+                regPwd:function(value) {
+                    //获取密码
+                     pwd = $("#new_pass").val();
+                    if(value != pwd) {
+                        return '两次输入的密码不一致';
+                    }
+                }
+            });
+            /**
+             * 提交表单
+             */
+            function submit_form() {
+                var old_pass = $('#old_pass').val();
+                var password = $('#new_pass').val();
+                var regPwd = $('#regPwd').val();
+                if(password.length < 6){
+                    showTips('密码长度不能少于6六',0,'提示','');
+                    return;
+                }
+                if (regPwd != password){
+                    showTips('两次密码填写不一致',0,'提示','');
+                    return;
+                }
+                $.ajax({
+                    type: 'post',
+                    url: '/yqfadmin/update',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        'old_pass': old_pass,
+                        'password': password,
+                    }),
+                    beforeSend: function(xhr , settings){
+                        showLoading();
+                    },
+                    success: function (data) {
+                        if (data.code != 200) {
+                            showErrorTips(data.msg, '错误提示');
+                        } else {
+                            showMessage('保存成功！正在跳转...');
+                            setTimeout(function(){
+                                window.parent.location.href = '/yqfadmin/login';
+                            }, 1000);
+                        }
+                    },
+                    error: function (xhr, type) {
+                        showErrorTips(type + '：' + xhr.statusText, 0, xhr.status + ' 错误', '');
+                    },
+                    complete: function (xhr, status) {
+                        hideLoading();
+                    },
+
+                });
+            };
+            $('#submit_btn').on('click', function(){
+            submit_form();
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,196 @@
+{% extends "layout/formLayout.html" %}
+{% block title %}编辑版本{% endblock %}
+{% block style %}
+<style type="text/css">
+    .layui-form-label {
+        width: 270px;
+    }
+
+    .layui-input-block {
+        margin-left: 300px;
+    }
+
+    body {
+        background: white;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div style="padding: 15px;">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>编辑版本</legend>
+    </fieldset>
+    <form class="layui-form" id="form_box" method="post">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">版本号</label>
+            <div class="layui-input-block">
+                <input type="text" name="version_num" id="version_num" lay-verify="version_num" autocomplete="off"
+                       placeholder="请输入版本号" class="layui-input" required>
+                <input type="hidden" id="_id" name="_id">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">系统型号</label>
+            <div class="layui-input-block">
+                <select name="system_type" id="system_type">
+                    <option value="ios">ios</option>
+                    <option value="android">android</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">版本状态(提交市场审核时需要审核版本)</label>
+            <div class="layui-input-block">
+                <select name="status" id="status">
+                    <option value="1">正常版本</option>
+                    <option value="-1">审核版本</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否强制性升级到最新版本</label>
+            <div class="layui-input-block">
+                <select name="is_upgrade" id="is_upgrade">
+                    <option value="-1">不强制性升级</option>
+                    <option value="1">强制性升级</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">可用状态(当服务升级的时候可以关闭服务)</label>
+            <div class="layui-input-block">
+                <select name="available_status" id="available_status">
+                    <option value="1">正常可用</option>
+                    <option value="-1">关闭不可用</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">版本下载地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="download_url" id="download_url" lay-verify="download_url" autocomplete="off"
+                       placeholder="请输入此版本的下载地址" class="layui-input" required>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="remark" id="remark" lay-verify="remark"
+                       placeholder="请输入此轮播的备注" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">更新内容</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入更新内容" name="content" id="content" class="layui-textarea"
+                          style="width: 100%;height:300px;"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-layout-admin">
+            <div class="layui-input-block">
+                <div class="layui-footer" style="left: 0;">
+                    <button class="layui-btn" lay-submit="" id="demo1" lay-filter="component-form-demo1">立即提交</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+
+<script>
+
+    var $, form;
+    layui.config({
+        base: 'statices/plugins/layuiadmin/dist/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form', "laydate", 'layedit'], function () {
+        $ = layui.$;
+        form = layui.form;
+        //执行一个laydate实例
+        layui.laydate.render({
+            elem: '.showdate',
+            format: 'yyyy-MM-dd HH:mm:ss'
+        });
+
+        form = layui.form;
+        $form = $('form');
+
+
+        $.ajax({
+            type: 'get',
+            url: '/api/version_manag/detail?_id={{ _id }}',
+            dataType: 'json',
+            beforeSend: function (xhr, settings) {
+                showLoading();
+            },
+            success: function (data) {
+                if (data.code != 200) {
+                    var login_callback = undefined;
+                    if (data.code == 230) {
+                        login_callback = login_address_jump;
+                    }
+                    //如果是未登录则进行跳转
+                    showErrorTips(data.msg, '错误提示', login_callback);
+                    return;
+                } else {
+                    var item = data.data;
+                    $("#_id").val(item._id);
+                    $("#content").val(item.content);
+                    $("#version_num").val(item.version_num);
+                    $("#system_type").val(item.system_type);
+                    $("#download_url").val(item.download_url);
+                    $("#is_upgrade").val(item.is_upgrade);
+                    $("#available_status").val(item.available_status);
+                    $("#status").val(item.status);
+                    $("#remark").val(item.remark);
+                }
+                form.render();
+            },
+            error: function (xhr, type) {
+                showErrorTips(type + '：' + xhr.statusText, xhr.status + ' 错误');
+            },
+            complete: function (xhr, status) {
+                hideLoading();
+            }
+        });
+        $('#form_box').ajaxForm({
+            url: "/api/version_manag/update",
+            beforeSubmit: checkForm,  // pre-submit callback
+            beforeSend: beforesend,
+            success: complete,  // post-submit callback
+            error: error_fun,
+            dataType: 'json'
+        });
+        function beforesend() {
+            showLoading();
+        }
+
+        function checkForm() {
+            return true;
+        }
+
+        function complete(data) {
+            if (data.code == 200) {
+                showSuccessTips('更新成功！', '提示', function () {
+                    layer.closeAll("loading");
+                    parent.tab.changeTabsPage("version_manag/list", "版本列表");
+                });
+                return;
+            } else {
+                showErrorTips(data.msg, '提示', function () {
+                    layer.closeAll("loading");
+                });
+            }
+        }
+
+        function error_fun() {
+            showErrorTips('操作失败', '提示', function () {
+                layer.closeAll("loading");
+            });
+        }
+    });
+</script>
+{% endblock %}
