@@ -13,8 +13,8 @@ from model import (default_values, int_key, status_values, _insert, type_num_val
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 help_center_api_blue = Blueprint('help_center_api', __name__, url_prefix='/api/help_center')
 
@@ -63,8 +63,8 @@ def my_list():
                 _obj['type_num_name'] = type_num_values.get(_obj.get('type_num', 0), u'帮助文档')
                 _obj['boot_area_name'] = boot_area_values.get(_obj.get('boot_area', -1), u'无区域')
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print (e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})
@@ -130,7 +130,8 @@ def update():
         if key in data:
             _values = data.get(key)
             if _values:
-                if isinstance(_values, str) or isinstance(_values, unicode):
+                # if isinstance(_values, str) or isinstance(_values, unicode):
+                if isinstance(_values, str):
                     _values = _values.strip()
                 if key in int_key:
                     try:

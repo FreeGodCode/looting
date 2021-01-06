@@ -132,5 +132,5 @@ ad_statistical_day_dict = {
 if __name__ == '__main__':
     statistical_day_cur = statistical_day.find()
     for statistical_day_obj in statistical_day_cur:
-        print statistical_day_obj.get('today_str'), statistical_day_obj.get('red_average_num'), statistical_day_obj.get(
-            'user_red_record'), statistical_day_obj.get('user_num'), statistical_day_obj.get('user_num_active')
+        print (statistical_day_obj.get('today_str'), statistical_day_obj.get('red_average_num'), statistical_day_obj.get(
+            'user_red_record'), statistical_day_obj.get('user_num'), statistical_day_obj.get('user_num_active'))

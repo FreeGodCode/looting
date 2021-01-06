@@ -3,8 +3,8 @@ import sys
 
 from alipay import AliPay
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 
 class Payment():
@@ -46,7 +46,7 @@ class Payment():
                 remark=remark,
                 payer_show_name=payer_show_name
             )
-        except Exception, e:
+        except Exception as e:
             # 签名错误
             return False, u'支付宝提现系统升级中！'
         # 转账成功
@@ -59,7 +59,7 @@ class Payment():
                 return False, u'服务暂时不可用！'
             elif result.get('code') == '40004':
                 # 签名错误
-                print result.get('sub_msg')
+                print (result.get('sub_msg'))
                 return False, result.get('sub_code')
             else:
                 # 签名错误

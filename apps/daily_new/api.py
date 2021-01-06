@@ -12,8 +12,8 @@ from model import (model, get_list_obj, create_obj, update_obj, delete_obj, get_
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 daily_new_api_blue = Blueprint('daily_new_api', __name__, url_prefix='/api/daily_new')
 

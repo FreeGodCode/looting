@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-import sys
+# import sys
 
 from flask import Blueprint
 
@@ -9,8 +9,8 @@ from libs.flask_ex import get_request_page_params, format_request_params, reques
     float_keys_processor, exists_processor
 from libs.permission import permissions_check
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 withdraw_config_api_blue = Blueprint('withdraw_config_api', __name__, url_prefix='/api/withdraw_config')
 

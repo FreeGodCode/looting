@@ -8,8 +8,8 @@ from libs.common import login_api_check, judging_permissions
 from libs.db import operation
 from model import (default_values, int_key, float_key, _insert)
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+# reload(sys)
+# sys.setdefaultencoding("utf-8")
 
 operation_api_blue = Blueprint('operation_api', __name__, url_prefix='/api/operation')
 
@@ -94,7 +94,8 @@ def update():
 
         if key in data:
             _values = data.get(key)
-            if isinstance(_values, str) or isinstance(_values, unicode):
+            # if isinstance(_values, str) or isinstance(_values, unicode):
+            if isinstance(_values, str):
                 _values = _values.strip()
             if key in int_key:
                 try:

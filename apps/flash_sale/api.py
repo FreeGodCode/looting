@@ -13,8 +13,8 @@ from model import (model, update_obj, get_detail_obj,
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 flash_sale_api_blue = Blueprint('flash_sale_api', __name__, url_prefix='/api/flash_sale')
 
@@ -84,10 +84,6 @@ def update(_id, total_cost_num, lottery_cost_value):
 def delete(_id):
     delete_obj(_id)
     return Resp.ok()
-
-
-
-
 
 
 @flash_sale_api_blue.route('/real_list', methods=['get'])

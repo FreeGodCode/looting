@@ -12,8 +12,8 @@ from libs.permission import permissions_check
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 task_event_api_blue = Blueprint('task_event_api', __name__, url_prefix='/api/task_event')
 

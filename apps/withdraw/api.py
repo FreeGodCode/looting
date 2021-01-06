@@ -10,8 +10,8 @@ from libs.permission import permissions_check
 from model import (default_values, int_keys, get_withdraw_order_list, get_withdraw_order_detail, set_audit_success,
                    set_audit_fail)
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 withdraw_api_blue = Blueprint('withdraw_api', __name__, url_prefix='/api/withdraw')
 

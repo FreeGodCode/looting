@@ -8,8 +8,8 @@ from libs.common import get_request_params
 from libs.flask_ex import format_request_params, float_keys_processor, Resp, int_keys_processor, exists_processor
 from libs.permission import permissions_check
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 invite_task_config_api_blue = Blueprint('invite_task_config_api', __name__, url_prefix='/api/invite_task_config')
 

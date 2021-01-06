@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-import sys
+# import sys
 
 from flask import Blueprint
 
@@ -9,8 +9,8 @@ from libs.flask_ex import get_request_page_params, format_request_params, reques
 from libs.permission import permissions_check
 from model import model
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 user_level_config_api_blue = Blueprint('user_level_config_api', __name__, url_prefix='/api/user_level_config')
 

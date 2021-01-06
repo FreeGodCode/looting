@@ -11,8 +11,9 @@ from libs.db import (operation, redis_admin, error_log, guess_red_detail, guess_
                      calorific_record, commission_record, redis_invite_code, system)
 from libs.utils import get_chars2
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 
 def calculate_planet(operation_obj, user_obj, real_value, is_commission=True):
@@ -183,7 +184,7 @@ def update_guess_red_detail():
                                 {'$inc': {'available_calorific': consume_calorific * 2,
                                           'calorific_total': consume_calorific * 2}})
                 guess_red_detail.update_one({'_id': guess_red_detail_obj.get('_id')}, {'$set': {'status': 2}})
-        except Exception, e:
+        except Exception as e:
             error_log.insert_one({'req_url': '', 'req_data': '', 'req_method': 'update_guess_red_detail',
                                   'error_str': str(e), 'today': datetime.now().strftime(format='%Y-%m-%d'),
                                   'time_stamp': int(time.time()),

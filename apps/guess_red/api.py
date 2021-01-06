@@ -8,8 +8,8 @@ from libs.common import login_api_check, judging_permissions
 from libs.db import guess_red, guess_red_detail, user
 from model import (default_values, int_key, status_values)
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+# reload(sys)
+# sys.setdefaultencoding("utf-8")
 
 guess_red_api_blue = Blueprint('guess_red_api', __name__, url_prefix='/api/guess_red')
 
@@ -48,7 +48,8 @@ def my_list():
         num = _count / limit
     if _count > (page_num * limit):
         _list = []
-        cur_list = _cur.sort([('today_str', -1), ('hour_int', -1), ('minute_int', -1)]).skip(page_num * limit).limit(limit)
+        cur_list = _cur.sort([('today_str', -1), ('hour_int', -1), ('minute_int', -1)]).skip(page_num * limit).limit(
+            limit)
         for _obj in cur_list:
             try:
                 _obj['_id'] = str(_obj['_id'])
@@ -57,8 +58,8 @@ def my_list():
 
                 _obj['value'] = '%.2f' % (float(_obj.get('value')) / float(100))
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})
@@ -94,8 +95,8 @@ def detail_list():
             try:
                 _obj['_id'] = str(_obj['_id'])
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})

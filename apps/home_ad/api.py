@@ -13,8 +13,8 @@ from model import (default_values, int_key, status_values, _insert, type_num_val
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 home_ad_api_blue = Blueprint('home_ad_api', __name__, url_prefix='/api/home_ad')
 
@@ -68,8 +68,8 @@ def my_list():
                     except:
                         pass
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print (e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})
@@ -135,7 +135,8 @@ def update():
         if key in data:
             _values = data.get(key)
             if _values:
-                if isinstance(_values, str) or isinstance(_values, unicode):
+                # if isinstance(_values, str) or isinstance(_values, unicode):
+                if isinstance(_values, str):
                     _values = _values.strip()
                 if key in int_key:
                     try:

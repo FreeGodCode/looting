@@ -9,8 +9,8 @@ from libs.permission import permissions_check
 from libs.utils import upload_img
 from model import (default_values, int_key, float_key, _insert)
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+# reload(sys)
+# sys.setdefaultencoding("utf-8")
 
 system_api_blue = Blueprint('system_api', __name__, url_prefix='/api/system')
 
@@ -43,7 +43,8 @@ def update():
 
         if key in data:
             _values = data.get(key)
-            if isinstance(_values, str) or isinstance(_values, unicode):
+            # if isinstance(_values, str) or isinstance(_values, unicode):
+            if isinstance(_values, str):
                 _values = _values.strip()
             if key in int_key:
                 try:

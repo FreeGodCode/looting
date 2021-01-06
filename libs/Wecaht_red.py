@@ -11,8 +11,8 @@ import requests
 from conf import conf
 from utils import md5
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 if 'Linux' in platform.system():
     WEIXIN_PAY_CERT_PATH = '/root/planet_back/cert/apiclient_cert.pem'
@@ -84,7 +84,7 @@ def sendredpack(re_openid='', total_amount=0,
     respose = requests.post(SENDREDPACK_URL, data=content, headers=headers,
                             cert=(WEIXIN_PAY_CERT_PATH, WEIXIN_PAY_CERT_KEY_PATH))
     try:
-        print respose.text.encode('utf8')
+        print(respose.text.encode('utf8'))
     except:
         pass
     re_xml = ElementTree.fromstring(respose.text.encode('utf8'))
@@ -178,7 +178,7 @@ def paymkttransfers(re_openid='', total_amount=0, mch_billno=None, wishing=u'热
     respose = requests.post(PAYMKTTRANSFERS_URL, data=content, headers=headers,
                             cert=(WEIXIN_PAY_CERT_PATH, WEIXIN_PAY_CERT_KEY_PATH))
     try:
-        print respose.text.encode('utf8')
+        print(respose.text.encode('utf8'))
     except:
         pass
     re_xml = ElementTree.fromstring(respose.text.encode('utf8'))
@@ -195,4 +195,4 @@ def paymkttransfers(re_openid='', total_amount=0, mch_billno=None, wishing=u'热
 
 
 if __name__ == '__main__':
-    print paymkttransfers('oOVUCvwftNal7rPFXr8vhIdF44YA', 100, mch_billno='1234567890111111111')[1]
+    print(paymkttransfers('oOVUCvwftNal7rPFXr8vhIdF44YA', 100, mch_billno='1234567890111111111')[1])

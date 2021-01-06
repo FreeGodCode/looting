@@ -36,7 +36,7 @@ def repair_data():
         except:
             planet_commission = 0
         if planet_commission:
-            print planet_commission
+            print(planet_commission)
             user.update_one({'_id': ObjectId(planet_id)},
                             {'$inc': {'planet_commission_total': planet_commission,
                                       'balance': planet_commission}})
@@ -88,10 +88,10 @@ def system_dividend():
             value_total = int(participate_dividend_calorific / penny_calorific)
             user_dividend_value = int(value_total * 100 / 115)
             user_dividend_value_total += user_dividend_value
-            print user_dividend_value, participate_dividend_calorific, user_id
+            print(user_dividend_value, participate_dividend_calorific, user_id)
         except:
             pass
-    print user_dividend_value_total
+    print(user_dividend_value_total)
 
 
 def third_transfer_profit():
@@ -144,12 +144,12 @@ def third_transfer_profit():
                     if req_json.get('code') == 0 and req_json.get('data', {}):
                         json_data = req_json.get('data', {})
                         break
-                except Exception, e:
+                except Exception as e:
                     continue
             if json_data:
                 ips = json_data.get('ips', 0)
                 if ips:
-                    print user_id, ips
+                    print(user_id, ips)
         except:
             pass
 
@@ -181,10 +181,10 @@ if __name__ == '__main__':
             resp = requests.post('https://api.5qx8.cn/api/open-fetch-user-data',
                                  headers={'sign': md5_text, 'Content-Type': 'multipart/form-data'}, params=opt)
             req_json = resp.json()
-            print req_json
+            print(req_json)
             if req_json.get('code') == 0 and req_json.get('data', {}):
                 json_data = req_json.get('data', {})
                 break
-        except Exception, e:
+        except Exception as e:
+            print(e)
             continue
-

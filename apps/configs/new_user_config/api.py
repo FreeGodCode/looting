@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-import sys
+# import sys
 
 from flask import Blueprint
 
@@ -8,8 +8,8 @@ from libs.flask_ex import format_request_params, int_keys_processor, Resp, float
 from libs.permission import permissions_check
 from .model import model
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 new_user_config_api_blue = Blueprint('new_user_config_api', __name__, url_prefix='/api/new_user_config')
 

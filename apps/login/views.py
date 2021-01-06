@@ -1,6 +1,8 @@
 # -*- coding: utf8 -*-
-import StringIO
+# import StringIO
+# python3已经将StringIO归入io
 import copy
+import io
 import json
 import string
 import time
@@ -30,7 +32,7 @@ def captcha():
     try:
         code_img, strs = create_validate_code(size=(135, 41), bg_color=(185, 211, 238), fg_color=(0, 0, 205),
                                               point_chance=4, chars=string.hexdigits)
-        buf = StringIO.StringIO()
+        buf = io.StringIO()
         code_img.save(buf, 'JPEG', quality=70)
         buf_str = buf.getvalue()
         response = make_response(buf_str)
@@ -42,8 +44,8 @@ def captcha():
         response.set_cookie('login_code', value=ver_code)
         response.headers['Content-Type'] = 'image/jpeg'
         return response
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
     return e
 
 
@@ -238,8 +240,8 @@ def my_list():
             try:
                 _obj['_id'] = str(_obj['_id'])
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})

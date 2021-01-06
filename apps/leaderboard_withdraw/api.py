@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-import sys
+# import sys
 
 from flask import Blueprint, request, jsonify
 
@@ -7,8 +7,8 @@ from libs.common import login_api_check, judging_permissions
 from libs.db import leaderboard_withdraw
 from model import (default_values, int_key)
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+# reload(sys)
+# sys.setdefaultencoding("utf-8")
 
 leaderboard_withdraw_api_blue = Blueprint('leaderboard_withdraw_api', __name__, url_prefix='/api/leaderboard_withdraw')
 
@@ -52,8 +52,8 @@ def my_list():
             try:
                 _obj['_id'] = str(_obj['_id'])
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})

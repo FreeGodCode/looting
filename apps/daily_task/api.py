@@ -13,8 +13,8 @@ from libs.permission import permissions_check
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 daily_task_api_blue = Blueprint('daily_task_api', __name__, url_prefix='/api/daily_task')
 

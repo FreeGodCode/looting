@@ -53,8 +53,8 @@ def _list():
                 _obj['_id'] = str(_obj['_id'])
                 _obj['status_name'] = status_values.get(_obj.get('status'))
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
 
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
@@ -107,7 +107,8 @@ def update():
         if key == 'user_num':
             continue
         _values = data.get(key, '')
-        if isinstance(_values, str) or isinstance(_values, unicode):
+        # if isinstance(_values, str) or isinstance(_values, unicode):
+        if isinstance(_values, str):
             _values = _values.strip()
 
         if key in int_key:

@@ -17,8 +17,8 @@ from libs.common import get_datetime_str
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 product_api_blue = Blueprint('product_api', __name__, url_prefix='/api/product')
 logger = logging.getLogger()

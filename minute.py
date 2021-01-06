@@ -16,8 +16,9 @@ from libs.db import (redis_ip, user, invite_code_data, redis_task2_code, redis_i
 from libs.utils import (random_str, generate_dwz, get_chars2, push_template, builder_random, unix_time_to_string,
                         get_now_part)
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 
 def invite_return_calorific():
@@ -46,7 +47,8 @@ def invite_return_calorific():
             effective_invitation_calorific = operation_obj.get('effective_invitation_calorific')
             effective_invitation_cash1 = operation_obj.get('effective_invitation_cash1')
             effective_invitation_cash2 = operation_obj.get('effective_invitation_cash2')
-            today_str = datetime.now().strftime(format='%Y-%m-%d')
+            # today_str = datetime.now().strftime(format='%Y-%m-%d')
+            today_str = datetime.now().strftime('%Y-%m-%d')
             try:
                 invite_user_obj = user.find_one({'_id': ObjectId(invite_id)})
             except:
@@ -71,7 +73,7 @@ def invite_return_calorific():
                         try:
                             push_template(openid, template_id, '', invite_json.get('value', ''),
                                           u'您的{0}为您贡献了一笔分润，请进入热量星球APP查看我的收益。'.format(invite_json.get('nickname')),
-                                          datetime.now().strftime(format='%Y-%m-%d %H:%M'))
+                                          datetime.now().strftime('%Y-%m-%d %H:%M'))
                         except:
                             pass
                 continue
@@ -193,7 +195,7 @@ def invite_return_calorific():
                 user.update_many({'invite_id': invite_id}, {'$set': {'superior_planet_id': planet_id}})
                 user.update_many({'superior_invite_id': invite_id},
                                  {'$set': {'upperlevel_planet_id': planet_id}})
-        except Exception, e:
+        except Exception as e:
             error_log.insert_one(
                 {'fn_name': 'invite_return_calorific_1', 'invite_json': invite_json, 'error_str': str(e),
                  'today': datetime.now().strftime(format='%Y-%m-%d')})
@@ -346,7 +348,7 @@ def invite_activity_cash():
                                         {'$set': {'invite_active_status': -2, 'invite_active_time': today_str}})
                 else:
                     continue
-        except Exception, e:
+        except Exception as e:
             error_log.insert_one(
                 {'fn_name': 'invite_return_calorific_1', 'invite_activity': invite_json, 'error_str': str(e),
                  'today': datetime.now().strftime(format='%Y-%m-%d')})
@@ -426,19 +428,19 @@ def get_proxy_ip_new():
     url = 'http://tvp.daxiangdaili.com/ip/?tid=558934365661740&num=1000&category=2&foreign=none'
     res = requests.get(url, timeout=10)
     if res.status_code != 200:
-        print u'获取代理IP失败……'
+        print(u'获取代理IP失败……')
         time.sleep(2)
         url = 'http://tvp.daxiangdaili.com/ip/?tid=558934365661740&num=1000&category=2&foreign=none'
         res = requests.get(url, timeout=10)
         if res.status_code != 200:
-            print u'获取代理IP失败……'
+            print(u'获取代理IP失败……')
             return
     ips = res.text.splitlines()
     for ip in ips:
         if ip.find('ERROR') > -1:
-            print u'跳过'
+            print(u'跳过')
             continue
-        print ip
+        print(ip)
         ip = ip.strip()
         redis_ip.lpush('normal', ip)
     return True
@@ -508,27 +510,27 @@ if __name__ == '__main__':
     try:
         open_flash_sale()
     except Exception as e:
-        print 'open_flash_sale: ' + str(e)
+        print('open_flash_sale: ' + str(e))
     try:
         # 服务器内部错误日志处理
         insert_error_log()
-    except Exception, e:
-        print 'insert_error_log: ' + str(e)
+    except Exception as e:
+        print('insert_error_log: ' + str(e))
     try:
         # 插入异常请求日志
         insert_deviant_log()
-    except Exception, e:
-        print 'insert_deviant_log: ' + str(e)
+    except Exception as e:
+        print('insert_deviant_log: ' + str(e))
     try:
         # 定时生成邀请码
         generate_invite_code()
-    except Exception, e:
-        print 'generate_invite_code: ' + str(e)
+    except Exception as e:
+        print('generate_invite_code: ' + str(e))
     try:
         # 将用户的邀请码 发送到消息队列任务
         send_invite_code()
-    except Exception, e:
-        print 'send_invite_code: ' + str(e)
+    except Exception as e:
+        print('send_invite_code: ' + str(e))
     # try:
     #     # 生成 关注公众号 的提现码
     #     generate_cash_code()

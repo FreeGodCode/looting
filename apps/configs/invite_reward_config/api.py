@@ -9,8 +9,8 @@ from libs.flask_ex import get_request_page_params, format_request_params, reques
 from libs.permission import permissions_check
 from model import model
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 invite_reward_config_api_blue = Blueprint('invite_reward_config_api', __name__, url_prefix='/api/invite_reward_config')
 

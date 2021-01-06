@@ -6,9 +6,6 @@ from datetime import datetime
 
 from bson import ObjectId
 
-
-
-
 __null_func = lambda x: x
 
 

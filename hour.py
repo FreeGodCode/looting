@@ -15,8 +15,9 @@ from libs.db import (req_log, redis_req_log, s_user_online_t, withdraw_record, u
                      domain_h5)
 from libs.utils import timestamp_to_strftime, jp_notification
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 
 @Async
@@ -239,5 +240,5 @@ if __name__ == '__main__':
     try:
         # 插入正常请求日志
         insert_req_log()
-    except Exception, e:
-        print str(e)
+    except Exception as e:
+        print(str(e))

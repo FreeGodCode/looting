@@ -13,8 +13,8 @@ from model import (default_values, int_key, status_values, _insert, open_system_
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 app_wake_task_api_blue = Blueprint('app_wake_task_api', __name__, url_prefix='/api/app_wake_task')
 
@@ -62,8 +62,8 @@ def my_list():
                 _obj['status_name'] = status_values.get(_obj.get('status', 0), '-')
                 _obj['open_system_name'] = open_system_values.get(_obj.get('open_system', 0), '-')
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print (e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})
@@ -129,7 +129,8 @@ def update():
         if key in data:
             _values = data.get(key)
             if _values:
-                if isinstance(_values, str) or isinstance(_values, unicode):
+                # if isinstance(_values, str) or isinstance(_values, unicode):
+                if isinstance(_values, str):
                     _values = _values.strip()
                 if key in int_key:
                     try:

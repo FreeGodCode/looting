@@ -11,8 +11,9 @@ from libs.db import (operation, dividend_config, integer_red, integer_red_detail
                      commission_record, redis_invite_code, calorific_record)
 from libs.utils import timestamp_to_strftime, get_chars2
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 
 def reservation_hongbao(money, envelope_num, lowest_value, multiple):
@@ -364,8 +365,8 @@ if __name__ == '__main__':
     try:
         # 生成整点红包
         generate_integer_red()
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
     try:
         # 生成猜红包的值
         generate_guess_red()
@@ -375,5 +376,5 @@ if __name__ == '__main__':
     try:
         # 系统分红
         system_dividend()
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)

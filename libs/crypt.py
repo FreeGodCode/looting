@@ -65,7 +65,7 @@ class Sign:
 
     def sign(self):
         string = '&'.join(['%s=%s' % (key.lower(), self.ret[key]) for key in sorted(self.ret)])
-        print string
+        print(string)
         self.ret['signature'] = hashlib.sha1(string).hexdigest()
         return self.ret
 
@@ -87,10 +87,10 @@ def decrypt_zip(content):
 
 
 if __name__ == '__main__':
-    print encryption_zip('pc001762仕多副食店')
-    print decrypt_zip(encryption_zip('pc001762仕多副食店'))
+    print(encryption_zip('pc001762仕多副食店'))
+    print(decrypt_zip(encryption_zip('pc001762仕多副食店')))
 
     pc = XKcrypt()  # 初始化密钥
     e = pc.encrypt("pc001762仕多副食店")  # 加密
     d = pc.decrypt(e)  # 解密
-    print e, d
+    print(e, d)

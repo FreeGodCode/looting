@@ -316,7 +316,7 @@ def start_transfer_alipay(withdraw_record_obj, review_name=u'系统自动'):
             Payment_obj = Payment('2019101568374962', '')
             result_status, error_code = Payment_obj.pay(serial_number, alipay_account, amount,
                                                         user_obj.get('alipay_name', ''))
-        except Exception, e:
+        except Exception as e:
             result_status, error_code = False, u'网络错误' + str(e)
     else:
         result_status, error_code = True, u'成功'
@@ -342,7 +342,7 @@ def start_transfer_alipay(withdraw_record_obj, review_name=u'系统自动'):
             Payment_obj = Payment('2019101568374962', '')
             result_status, error_code = Payment_obj.pay(serial_number, alipay_account, amount,
                                                         user_obj.get('alipay_name', ''))
-        except Exception, e:
+        except Exception as e:
             result_status, error_code = False, u'网络错误' + str(e)
         if result_status:
             # 提现成功
@@ -541,7 +541,7 @@ def red_envelopes_wechat(withdraw_record_obj, review_name=u'系统自动'):
             result_status, error_code = paymkttransfers(re_openid=openid, total_amount=cash_value,
                                                         mch_billno=serial_number, client_ip=client_ip,
                                                         check_name='NO_CHECK', re_user_name='')
-        except Exception, e:
+        except Exception as e:
             result_status, error_code = False, u'网络错误' + str(e)
     else:
         result_status, error_code = True, u'成功'

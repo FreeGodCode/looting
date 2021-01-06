@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-import sys
+# import sys
 import uuid
 
 from flask import Blueprint, request
@@ -10,8 +10,11 @@ from libs.permission import permissions_check
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
+# import importlib, sys
+# importlib.reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 common_api_blue = Blueprint('common_api', __name__, url_prefix='/api/common')
 

@@ -16,4 +16,4 @@ loglevel = 'info'  # 日志级别
 errorlog = 'log/error.log'  # 错误日志文件路径
 # accesslog = 'log/access.log'  # 正常日志文件路径
 
-reload=True
+reload = True

@@ -15,8 +15,9 @@ from libs.db import (statistical_day, user, commission_record, reg_user, calorif
                      redis_admin, redis_invite_code, integer_red_detail, guess_red_detail)
 from libs.utils import timestamp_to_strftime, jp_notification, send_sms_163, get_chars2
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 
 class Inviter_recursiver():
@@ -278,8 +279,8 @@ def generate_ad_statistical_day(
             home_ad_total2 = int(_ad_total_dict.get('home_ad_total2'))
             home_ad_total3 = int(_ad_total_dict.get('home_ad_total3'))
             home_ad_total4 = int(_ad_total_dict.get('home_ad_total4'))
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
         video_num_total = 0
         video_num_total1 = 0
         video_num_total2 = 0
@@ -445,7 +446,7 @@ def send_jg_notification():
         'body': content
     }
     try:
-        print jp_notification(alert, title, 'id', '')
+        print(jp_notification(alert, title, 'id', ''))
     except:
         pass
 
@@ -471,7 +472,7 @@ def sync_leaderboard():
             break
         try:
             user_id = req_user_notice[1]
-            print user_id
+            print(user_id)
             user_obj = user.find_one({'_id': ObjectId(user_id)})
 
             # 计算邀请排行榜数据
@@ -527,8 +528,8 @@ def sync_leaderboard():
                     'reg_time': user_obj.get('created_time')
                 }
                 leaderboard_withdraw.update_one({'user_id': user_id}, {'$set': add_dict}, upsert=True)
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
 
 
 def send_user_notice_task():
@@ -550,7 +551,7 @@ def start_user_notice_task():
     """
     while True:
         req_user_notice = redis_code.brpop('user_phone', timeout=2)
-        print req_user_notice
+        print(req_user_notice)
         if not req_user_notice:
             break
         phone = req_user_notice[1]
@@ -573,7 +574,7 @@ def start_user_notice_task():
         else:
             offline_time = 60 * 60 * 24 * 30
             offline_day_num = 30
-        print phone
+        print(phone)
         params_163 = '{"code":"https://dwz.cn/RuMxm0iM"}'
         response_json = send_sms_163(phone, params_163, '10910')
         if response_json.get('code') == 200:
@@ -1033,7 +1034,8 @@ def third_transfer_profit():
                     if req_json.get('code') == 0 and req_json.get('data', {}):
                         json_data = req_json.get('data', {})
                         break
-                except Exception, e:
+                except Exception as e:
+                    print(e)
                     continue
             if json_data:
                 ips = json_data.get('ips', 0)
@@ -1045,7 +1047,8 @@ def third_transfer_profit():
                                                          'show_cash': real_value, 'wechat_transfer_ips': ips}})
                     real_calorific = wechat_transfer_calorific * real_ips
                     # 收益 记录
-                    if not red_record.find_one({'origin': u'转发文章有效阅读收益', 'user_id': user_id,
+                    if not red_record.find_one({'origin': u'转发文章有效阅读收益',
+                                                'user_id': user_id,
                                                 'today': datetime.now().strftime(format='%Y-%m-%d')}):
                         serial_number = '{0}{1}{2}{3}{4}{5}{6}'.format(datetime.now().strftime(format='%Y'),
                                                                        get_chars2(0, 1),
@@ -1147,8 +1150,8 @@ if __name__ == '__main__':
     try:
         # 官方推广访问统计
         generate_statistical_official()
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
     try:
         # 生成昨天 报表数据
         generate_statistical_day()

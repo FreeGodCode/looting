@@ -13,13 +13,14 @@ from libs.db import (user, system, redis_code, task2_code_data, redis_task2_code
                      withdraw_record, operation, redis_admin, s_user_online_t)
 from libs.utils import random_str, timestamp_to_strftime
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 
 # @Async
 def compute_planet_calorific_total(planet_id):
-    print planet_id
+    print(planet_id)
     if not planet_id:
         return False
     calorific_total_dict = user.aggregate([
@@ -111,13 +112,13 @@ def start_task2_code():
         try:
             # 生成 关注公众号 领取奖励的验证码
             generate_task2_code()
-        except Exception, e:
-            print 'generate_task2_code: ' + str(e)
+        except Exception as e:
+            print('generate_task2_code: ' + str(e))
         try:
             # 将关注公众号 领取奖励的验证码 发送到消息队列任务
             send_task2_code()
-        except Exception, e:
-            print 'send_task2_code: ' + str(e)
+        except Exception as e:
+            print('send_task2_code: ' + str(e))
 
         new_hour_str = datetime.now().strftime(format='%H')
         if new_hour_str != hour_str:
@@ -223,7 +224,8 @@ def third_transfer_profit():
                     if req_json.get('code') == 0 and req_json.get('data', {}):
                         json_data = req_json.get('data', {})
                         break
-                except Exception, e:
+                except Exception as e:
+                    print(e)
                     continue
             if json_data:
                 ips = json_data.get('ips', 0)
@@ -242,28 +244,28 @@ if __name__ == '__main__':
     try:
         # 检查邀请用户首次提现是否奖励
         check_withdraw_reward()
-    except Exception, e:
-        print str(e)
+    except Exception as e:
+        print(str(e))
     try:
         # 检查邀请用户首次注册是否奖励
         check_registration_reward()
-    except Exception, e:
-        print str(e)
+    except Exception as e:
+        print(str(e))
     try:
         # 发送计算星球总热量的任务
         send_compute_planet_calorific_task()
-    except Exception, e:
-        print str(e)
+    except Exception as e:
+        print(str(e))
     try:
         # 开始计算每个星球 的总热量
         start_compute_planet_calorific_task()
-    except Exception, e:
-        print str(e)
+    except Exception as e:
+        print(str(e))
     try:
         # 生成 关注公众号 领取奖励的验证码 并发送任务
         start_task2_code()
-    except Exception, e:
-        print 'start_task2_code: ' + str(e)
+    except Exception as e:
+        print('start_task2_code: ' + str(e))
     try:
         third_transfer_profit()
     except:

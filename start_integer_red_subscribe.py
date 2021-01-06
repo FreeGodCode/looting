@@ -10,15 +10,16 @@ from conf import conf_ver
 from libs.db import (integer_red_subscribe)
 from libs.utils import (push_template, unix_time_to_string)
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 
 @Async
 def start_push_template(integer_red_subscribe_obj, template_id):
     wx_uid = integer_red_subscribe_obj.get('wx_uid')
     created_time = integer_red_subscribe_obj.get('created_time')
-    start_time = 60 - int(datetime.now().strftime(format='%M'))
+    # start_time = 60 - int(datetime.now().strftime(format='%M'))
+    start_time = 60 - int(datetime.now().strftime('%M'))
     push_template(wx_uid, template_id, '', '', created_time,
                   u'整点红包将于{0}分钟之后开始，请及时进入App参与活动，过期将无法获得奖金。'.format(start_time))
     integer_red_subscribe.update_one({'_id': integer_red_subscribe_obj.get('_id')}, {'$set': {'status': 1}})

@@ -95,8 +95,10 @@ def create_validate_code(size=(120, 30),
     if draw_points:
         # 绘制干扰点
         chance = min(50, max(0, int(point_chance)))  # 大小限制在[0, 50]
-        for w in xrange(width):
-            for h in xrange(height):
+        # for w in xrange(width):
+        for w in range(width):
+            # for h in xrange(height):
+            for h in range(height):
                 tmp = random.randint(0, 50)
                 if tmp > 50 - chance:
                     draw.point((w, h), fill=(0, 0, 0))
@@ -119,9 +121,11 @@ def create_validate_code(size=(120, 30),
     return img, strs
 
 
-def create_threadpool(func, number, args=[]):
+# def create_threadpool(func, number, args=[]):
+def create_threadpool(func, number, *args):
     threadpool = []
-    for i in xrange(number):
+    # for i in xrange(number):
+    for i in range(number):
         th = threading.Thread(target=func, args=args)
         threadpool.append(th)
     for th in threadpool:
@@ -130,7 +134,8 @@ def create_threadpool(func, number, args=[]):
         threading.Thread.join(th)
 
 
-def create_pool(number, func, t_number, args=[]):
+# def create_pool(number, func, t_number, args=[]):
+def create_pool(number, func, t_number, *args):
     pool = Pool(processes=number)
     for i in range(number):
         pool.apply_async(create_threadpool, (func, t_number, args,))
@@ -347,7 +352,7 @@ def timestamp_to_strftime(timestamp, format='%Y-%m-%d %H:%M:%S'):
 
 
 def multi_get_letter(str_input):
-    if isinstance(str_input, unicode):
+    if isinstance(str_input, str):
         unicode_str = str_input
     else:
         try:
@@ -356,7 +361,7 @@ def multi_get_letter(str_input):
             try:
                 unicode_str = str_input.decode('gbk')
             except:
-                print 'unknown coding'
+                print('unknown coding')
                 return
     return_list = []
     for one_unicode in unicode_str:
@@ -739,8 +744,8 @@ def send_sms_163(mobile, params, templateId):
         response = requests.post(url=sms_send_uri, data=data, timeout=30)
         response_json = response.json()
         return response_json
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
         return {'code': 201}
 
 
@@ -818,4 +823,4 @@ def get_datetime_part(datetime_val, format_str):
 
 
 if __name__ == '__main__':
-    print generate_tcn('http://sms.yiqifu88.com/')
+    print(generate_tcn('http://sms.yiqifu88.com/'))

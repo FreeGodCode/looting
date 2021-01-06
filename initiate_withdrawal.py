@@ -8,8 +8,9 @@ from datetime import datetime
 from libs.common import withdraw_way
 from libs.db import operation, withdraw_task_code, error_log
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 
 def initiate_withdrawal():
@@ -32,7 +33,7 @@ def initiate_withdrawal():
             withdraw_json = json.loads(withdraw_task[1])
             serial_number = withdraw_json.get('serial_number')
             withdraw_way(serial_number, automatic_withdraw_cash, is_back=False)
-        except Exception, e:
+        except Exception as e:
             error_log.insert_one({'req_url': '', 'req_data': '', 'req_method': 'initiate_withdrawal',
                                   'error_str': str(e), 'today': datetime.now().strftime(format='%Y-%m-%d'),
                                   'time_stamp': int(time.time()),

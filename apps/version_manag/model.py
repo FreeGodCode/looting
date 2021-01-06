@@ -69,7 +69,8 @@ def _insert(data):
         if key in data:
             _values = data.get(key)
             if _values:
-                if isinstance(_values, str) or isinstance(_values, unicode):
+                # if isinstance(_values, str) or isinstance(_values, unicode):
+                if isinstance(_values, str):
                     _values = _values.strip()
                 if key in int_key:
                     try:

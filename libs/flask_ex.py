@@ -102,7 +102,8 @@ convert_dict = {
     'string': lambda x: x is not None and str(x) or '',
     'str': lambda x: x is not None and str(x) or '',
     'int': lambda x: x is not None and int(x) or None,
-    'unicode': lambda x: x is not None and unicode(x) or u'',
+    # 'unicode': lambda x: x is not None and unicode(x) or u'',
+    'unicode': lambda x: x is not None and str(x) or u'',
     'float': lambda x: x is not None and float(x) or None,
     'number': lambda x: x is not None and float(x) or None,
     'bool': lambda x: x is not None and bool(x) or None,
@@ -114,7 +115,7 @@ def analytic_params(args):
     rule = r'<(.+?)\:([^ \:]+)(?:\:([0-9]+))?>'
     result_list = list()
     for arg_obj in args:
-        if not isinstance(arg_obj, (str, unicode)):
+        if not isinstance(arg_obj, str):
             raise Exception('装饰器参数错误')
         match_obj = re.match(rule, arg_obj)
         if not match_obj:
@@ -367,9 +368,12 @@ def format_request_params(request_params, default_values, fields_processors=_nul
     for item in default_values:
         req_value = data.get(item)
         if req_value not in [None, '']:
-            if isinstance(req_value, (str, unicode)):
+            # if isinstance(req_value, (str, unicode)):
+            if isinstance(req_value, str):
                 req_value = req_value.strip()
-            if convert_object_id and isinstance(req_value, (str, unicode)) and len(
+            # if convert_object_id and isinstance(req_value, (str, unicode)) and len(
+            #         req_value) == 24 and ObjectId.is_valid(req_value):
+            if convert_object_id and isinstance(req_value, str) and len(
                     req_value) == 24 and ObjectId.is_valid(req_value):
                 req_value = ObjectId(req_value)
             if isinstance(fields_processors, list):

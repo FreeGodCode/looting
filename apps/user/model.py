@@ -188,7 +188,7 @@ if __name__ == '__main__':
             "unionid": "oLaQOwsqwrwR6lOwKh2xgsghmqbc",
             "invite_active_time": "2019-09-27"})
 
-    print u'用户手机&&昵称&&从注册到提现耗时&&从注册到抢红包耗时&&余额&&已提现金额&&冻结金额&&活跃天数&&邀请人数&&邀请人&&拆红包次数&&注册时间'
+    print (u'用户手机&&昵称&&从注册到提现耗时&&从注册到抢红包耗时&&余额&&已提现金额&&冻结金额&&活跃天数&&邀请人数&&邀请人&&拆红包次数&&注册时间')
     user_cur = user.find()
     for user_obj in user_cur:
         withdraw_time = 0
@@ -244,7 +244,6 @@ if __name__ == '__main__':
         ])
         try:
             if isinstance(withdraw_total_dict1, dict):
-
                 _withdraw_total_dict1 = withdraw_total_dict1.get('result')[0]
                 withdraw_total1 = int(_withdraw_total_dict1.get('withdraw_total'))
             else:
@@ -252,6 +251,7 @@ if __name__ == '__main__':
                 withdraw_total1 = int(_withdraw_total_dict1.get('withdraw_total'))
         except:
             withdraw_total1 = 0
+
         s_user_online_t_num = s_user_online_t.find({'user_id': str(user_obj.get('_id'))}).count()
         invite_num = user.find({'invite_id': str(user_obj.get('_id'))}).count()
         invite_name = u'无'
@@ -260,18 +260,15 @@ if __name__ == '__main__':
                 user_obj['invite_name'] = user.find_one({'_id': user_obj.get('invite_id')}).get('nickname')
             except:
                 invite_name = u'官方邀请'
-        red_record_num = red_record.find({'user_id': str(user_obj.get('_id')), 'type_num': {'$in': [2, 3]}}).count()
-        print u'{0}&&{1}&&{2}&&{3}&&{4}&&{5}&&{6}&&{7}&&{8}&&{9}&&{10}&&{11}'.format(user_obj.get('phone'),
-                                                                                     user_obj.get('nickname'),
-                                                                                     withdraw_time, red_time,
-                                                                                     '%.2f' % (float(user_obj.get(
-                                                                                         'balance')) / 100), '%.2f' % (
-                                                                                             float(
-                                                                                                 withdraw_total) / 100),
-                                                                                     '%.2f' % (
-                                                                                             float(
-                                                                                                 withdraw_total1) / 100),
-                                                                                     s_user_online_t_num, invite_num,
-                                                                                     invite_name, red_record_num,
-                                                                                     user_obj.get(
-                                                                                         'created_time'))
+        red_record_num = red_record.find({'user_id': str(user_obj.get('_id')),
+                                          'type_num': {'$in': [2, 3]}}).count()
+        print(u'{0}&&{1}&&{2}&&{3}&&{4}&&{5}&&{6}&&{7}&&{8}&&{9}&&{10}&&{11}'.format(
+            user_obj.get('phone'),
+            user_obj.get('nickname'),
+            withdraw_time, red_time,
+            '%.2f' % (float(user_obj.get('balance')) / 100),
+            '%.2f' % (float(withdraw_total)/100),
+            '%.2f' % (float(withdraw_total1)/100),
+            s_user_online_t_num, invite_num,
+            invite_name, red_record_num,
+            user_obj.get('created_time')))

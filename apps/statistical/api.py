@@ -10,8 +10,8 @@ from libs.db import (statistical_day, user, reg_user, commission_record, calorif
                      integer_red_detail, guess_red_detail)
 from libs.utils import timestamp_to_strftime
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 statistical_api_blue = Blueprint('statistical_api', __name__, url_prefix='/api/statistical')
 
@@ -62,14 +62,14 @@ def my_list():
             dict_obj['real_user_num_active'] = real_user_num_active
             dict_obj['real_user_num_total'] = real_user_num_total
             dict_obj['user_num_active_per'] = '%.2f' % (
-                float(real_user_num_active * 100) / float(real_user_num_total)) + '%'
+                    float(real_user_num_active * 100) / float(real_user_num_total)) + '%'
 
             dict_obj['integer_red_user_num'] = integer_red_user_num
             dict_obj['guess_red_user_num'] = guess_red_user_num
             dict_obj['integer_red_user_per'] = '%.2f' % (
-                float(integer_red_user_num * 100) / float(user_num_active)) + '%'
+                    float(integer_red_user_num * 100) / float(user_num_active)) + '%'
             dict_obj['guess_red_user_per'] = '%.2f' % (
-                float(guess_red_user_num * 100) / float(user_num_active)) + '%'
+                    float(guess_red_user_num * 100) / float(user_num_active)) + '%'
             _list.append(dict_obj)
             cur_list = _cur.sort([('today_str', -1)]).skip(page_num * limit).limit(limit)
         else:
@@ -85,14 +85,14 @@ def my_list():
                 _obj['real_user_num_active'] = real_user_num_active
                 _obj['real_user_num_total'] = real_user_num_total
                 _obj['user_num_active_per'] = '%.2f' % (
-                    float(real_user_num_active * 100) / float(real_user_num_total)) + '%'
+                        float(real_user_num_active * 100) / float(real_user_num_total)) + '%'
                 _obj['integer_red_user_per'] = '%.2f' % (
-                    float(_obj.get('integer_red_user_num', 0) * 100) / float(user_num_active)) + '%'
+                        float(_obj.get('integer_red_user_num', 0) * 100) / float(user_num_active)) + '%'
                 _obj['guess_red_user_per'] = '%.2f' % (
-                    float(_obj.get('guess_red_user_num', 0) * 100) / float(user_num_active)) + '%'
+                        float(_obj.get('guess_red_user_num', 0) * 100) / float(user_num_active)) + '%'
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})
@@ -472,8 +472,8 @@ def ad_list():
                 _obj['_id'] = str(_obj['_id'])
 
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})
@@ -503,8 +503,8 @@ def user_share_list():
             try:
                 _obj['_id'] = str(_obj['_id'])
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})
@@ -537,8 +537,8 @@ def statistical_official_invite():
                 total_invitation_num = _obj.get('total_invitation_num', 0)
                 _obj['fission_num'] = total_invitation_num - _obj.get('first_level_invitation_num', 0)
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})

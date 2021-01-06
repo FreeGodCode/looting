@@ -78,4 +78,4 @@ def create_menu():
 def get_image_id_list():
     WeChatMaterial_obj = WeChatMaterial(wechat_config)
     a = WeChatMaterial_obj.batchget('image')
-    print a
+    print (a)

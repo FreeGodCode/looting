@@ -37,7 +37,8 @@ def _insert(data, is_role=False):
         if key in data:
             _values = data.get(key)
             if _values:
-                if isinstance(_values, str) or isinstance(_values, unicode):
+                # if isinstance(_values, str) or isinstance(_values, unicode):
+                if isinstance(_values, str):
                     _values = _values.strip()
                 if key in int_key:
                     try:
@@ -65,7 +66,7 @@ def _insert(data, is_role=False):
                     {'role_id': str(_id), 'authority': 'system:get'},
                 ]
             )
-            print _id
+            print (_id)
     except DuplicateKeyError:
         return {'status': False, 'msg': u'已存在'}
     return {'status': True, 'user_id': str(add_dict['_id'])}

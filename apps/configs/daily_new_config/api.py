@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 import sys
+from importlib import reload
 
 from flask import Blueprint
 

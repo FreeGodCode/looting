@@ -9,8 +9,8 @@ from libs.common import login_api_check, judging_permissions
 from libs.db import feedback, user, station_notice
 from model import (default_values, int_key)
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+# reload(sys)
+# sys.setdefaultencoding("utf-8")
 
 feedback_api_blue = Blueprint('feedback_api', __name__, url_prefix='/api/feedback')
 
@@ -61,8 +61,8 @@ def my_list():
                 if station_notice.find_one({'feedback_id': _obj.get('_id')}):
                     _obj['is_reply'] = u'已回复'
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print (e)
 
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:

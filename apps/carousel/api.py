@@ -11,8 +11,8 @@ from model import (model, get_list_obj, create_obj, get_detail_obj, delete_obj, 
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 carousel_api_blue = Blueprint('carousel_api', __name__, url_prefix='/api/carousel')
 

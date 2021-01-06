@@ -7,8 +7,8 @@ from libs.common import login_api_check, judging_permissions
 from libs.db import leaderboard
 from model import (default_values, int_key)
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+# reload(sys)
+# sys.setdefaultencoding("utf-8")
 
 leaderboard_api_blue = Blueprint('leaderboard_api', __name__, url_prefix='/api/leaderboard')
 
@@ -55,8 +55,8 @@ def my_list():
                 total_invitation_num = _obj.get('total_invitation_num', 0)
                 _obj['fission_num'] = total_invitation_num - number_people_invited
                 _list.append(_obj)
-            except Exception, e:
-                print e
+            except Exception as e:
+                print (e)
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': _list}})
     else:
         return jsonify({'code': 200, 'data': {'num': num, 'count': _count, 'page': page_num + 1, 'list': []}})

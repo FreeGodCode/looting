@@ -15,8 +15,8 @@ from model import (default_values, int_keys, order_info_processor, get_order_inf
 
 crypt_obj = XKcrypt()
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 order_api_blue = Blueprint('order_api', __name__, url_prefix='/api/order')
 
@@ -57,7 +57,8 @@ def update():
         if key in data:
             _values = data.get(key)
             if _values:
-                if isinstance(_values, str) or isinstance(_values, unicode):
+                # if isinstance(_values, str) or isinstance(_values, unicode):
+                if isinstance(_values, str):
                     _values = _values.strip()
                 if key in int_keys:
                     try:

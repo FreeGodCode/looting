@@ -13,7 +13,7 @@ def monitor_port(port, serv_name):
     sk.settimeout(1)
     try:
         sk.connect(('127.0.0.1', port))
-        print 'Server port {0} OK!'.format(port)
+        print('Server port {0} OK!'.format(port))
     except Exception:
         os.system('service {0} start'.format(serv_name))
     sk.close()
@@ -24,9 +24,9 @@ def monitor_gunicorn():
     sk.settimeout(1)
     try:
         sk.connect(('127.0.0.1', 8081))
-        print 'Server port 8080 OK!'
-    except Exception, E:
-        print str(E)
+        print('Server port 8080 OK!')
+    except Exception as  e:
+        print(str(e))
         os.system('sudo sh /root/planet_back/dir_sh/restartgun.sh')
     sk.close()
 
