@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-import sys
+# import sys
 from datetime import datetime
 
 from bson import ObjectId

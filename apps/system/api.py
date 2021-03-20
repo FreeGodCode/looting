@@ -1,9 +1,9 @@
 # -*- coding: utf8 -*-
-import sys
+# import sys
 
 from flask import Blueprint, jsonify, request
 
-from libs.common import login_api_check, judging_permissions
+# from libs.common import login_api_check, judging_permissions
 from libs.db import system
 from libs.permission import permissions_check
 from libs.utils import upload_img

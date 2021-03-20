@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 # import sys
-import uuid
+# import uuid
 
 from flask import Blueprint, request
 

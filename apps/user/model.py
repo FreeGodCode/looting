@@ -127,8 +127,9 @@ withdraw_status_values = {
     1: u'审核中'
 }
 
-int_keys = ['verified_status', 'status', 'sex', 'grade', 'showTimes', 'login_times',
-           'withdraw_status']
+int_keys = [
+    'verified_status', 'status', 'sex', 'grade', 'showTimes', 'login_times',  'withdraw_status'
+]
 
 if __name__ == '__main__':
     for i in range(117):
@@ -188,7 +189,7 @@ if __name__ == '__main__':
             "unionid": "oLaQOwsqwrwR6lOwKh2xgsghmqbc",
             "invite_active_time": "2019-09-27"})
 
-    print (u'用户手机&&昵称&&从注册到提现耗时&&从注册到抢红包耗时&&余额&&已提现金额&&冻结金额&&活跃天数&&邀请人数&&邀请人&&拆红包次数&&注册时间')
+    print(u'用户手机&&昵称&&从注册到提现耗时&&从注册到抢红包耗时&&余额&&已提现金额&&冻结金额&&活跃天数&&邀请人数&&邀请人&&拆红包次数&&注册时间')
     user_cur = user.find()
     for user_obj in user_cur:
         withdraw_time = 0
@@ -267,8 +268,8 @@ if __name__ == '__main__':
             user_obj.get('nickname'),
             withdraw_time, red_time,
             '%.2f' % (float(user_obj.get('balance')) / 100),
-            '%.2f' % (float(withdraw_total)/100),
-            '%.2f' % (float(withdraw_total1)/100),
+            '%.2f' % (float(withdraw_total) / 100),
+            '%.2f' % (float(withdraw_total1) / 100),
             s_user_online_t_num, invite_num,
             invite_name, red_record_num,
             user_obj.get('created_time')))

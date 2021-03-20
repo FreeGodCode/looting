@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 import json
-import sys
+# import sys
 
 from flask import Blueprint, jsonify, request
 

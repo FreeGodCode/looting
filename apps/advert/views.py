@@ -1,9 +1,9 @@
 # -*- coding: utf8 -*-
-from bson import ObjectId
+# from bson import ObjectId
 from flask import Blueprint, render_template, request
 
 from libs.common import login_check
-from libs.db import domain_h5
+# from libs.db import domain_h5
 from libs.flask_ex import request_args_verify
 
 advert_blue = Blueprint('advert', __name__, template_folder='../../templates',

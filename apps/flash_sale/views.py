@@ -1,12 +1,12 @@
 # -*- coding: utf8 -*-
 from datetime import datetime, timedelta
 
-from bson import ObjectId
+# from bson import ObjectId
 from flask import Blueprint, render_template, request
 
 from libs.common import login_check
 from libs.crypt import XKcrypt
-from libs.db import flash_sale_template
+# from libs.db import flash_sale_template
 
 crypt_obj = XKcrypt()
 flash_sale_blue = Blueprint('flash_sale', __name__, template_folder='../../templates',

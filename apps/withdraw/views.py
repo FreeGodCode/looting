@@ -13,6 +13,7 @@ withdraw_blue = Blueprint('withdraw', __name__, template_folder='../../templates
 def _list():
     return render_template('withdraw/list.html')
 
+
 @withdraw_blue.route('/edit', methods=['get'])
 @login_check
 def eidt():

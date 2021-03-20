@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-import sys
+# import sys
 
 from bson import ObjectId
 from flask import Blueprint, request, jsonify
