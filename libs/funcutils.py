@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-# author: tefsky
+# author: ty
 
 def get_func_default_values(func):
     return func.func_defaults

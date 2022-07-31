@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-# author: tefsky
+# author: ty
 
 import functools
 import re

@@ -1,6 +1,5 @@
 # -*- coding: utf8 -*-
-# author: tefsky
-
+# author: ty
 
 
 def ensure_start_with(original, string):
