@@ -1,12 +1,14 @@
 # -*- coding: utf8 -*-
 import os
 
+
 class Config(object):
     DEBUG = True
-    # flask端口
     # flask绑定ip
     HOST = '127.0.0.1'
+    # flask端口
     PORT = 8081
+
     # Redis IP地址
     R_HOST = '47.101.67.173'
     # Redis 端口
@@ -30,7 +32,7 @@ class Config(object):
     ACCESS_KEY_ID = 'LTAIqDF9lOjDXbgh'
     ACCESS_KEY_SECRET = 'QXVM7cDXV8vh0uX5WfHtBN9a4uu88y'
 
-    # # 极光api
+    # 极光api
     # jp_app_key = '3e0957338ed874a92f45b167'
     # jp_secret = '0e0b4c40cedb98ca985705b6'
     # 极光api
@@ -50,21 +52,21 @@ class DevelopConfig(Config):
     DB_NAME = 'duobao_db'
     # flask是否开启debug模式
     # DEBUG = False
-    # # 数据库IP地址
+    # 数据库IP地址
     DB_HOST = '127.0.0.1'
-    # # 数据库端口
+    # 数据库端口
     DB_PORT = 27017
-    # # 数据库账号
+    # 数据库账号
     DB_UN = 'root'
-    # # 数据库密码
+    # 数据库密码
     DB_PW = 'dev_test'
-    # # Redis IP地址
+    # Redis IP地址
     R_HOST = '127.0.0.1'
-    # # Redis 端口
+    # Redis 端口
     R_PORT = 6379
-    # # Redis 密码
+    # Redis 密码
     R_AUTH = 'dev_test'
-    # # 接口请求url
+    # 接口请求url
     # api_url = 'http://api.yiqifu88.cn'
 
 
