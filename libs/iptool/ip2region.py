@@ -202,8 +202,8 @@ class Ip2Region(object):
         """
         try:
             self.__f = io.open(dbfile, "rb")
-        except IOError, e:
-            print "[Error]: ", e
+        except IOError as e:
+            print(f"[Error]: {e}")
             sys.exit()
 
     def returnData(self, dsptr):
@@ -211,7 +211,7 @@ class Ip2Region(object):
         " get ip data from db file by data start ptr
         " param: dsptr
         """
-        dataPtr = dsptr & 0x00FFFFFFL
+        dataPtr = dsptr & 0x00FFFFFF
         dataLen = (dsptr >> 24) & 0xFF
 
         self.__f.seek(dataPtr)

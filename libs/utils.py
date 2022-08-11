@@ -121,8 +121,8 @@ def create_validate_code(size=(120, 30),
     return img, strs
 
 
-# def create_threadpool(func, number, args=[]):
-def create_threadpool(func, number, *args):
+# def create_threadpool(func, number, *args):
+def create_threadpool(func, number, args=[]):
     threadpool = []
     # for i in xrange(number):
     for i in range(number):
@@ -134,8 +134,8 @@ def create_threadpool(func, number, *args):
         threading.Thread.join(th)
 
 
-# def create_pool(number, func, t_number, args=[]):
-def create_pool(number, func, t_number, *args):
+# def create_pool(number, func, t_number, *args):
+def create_pool(number, func, t_number, args=[]):
     pool = Pool(processes=number)
     for i in range(number):
         pool.apply_async(create_threadpool, (func, t_number, args,))
